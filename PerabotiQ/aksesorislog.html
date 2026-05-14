@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Product Details</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/animate.css/animate.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+
+</head>
+
+<body class="product-details-page">
+
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+  
+        <a href="index.html" class="logo d-flex align-items-center">
+            <h1 class="sitename">PerabotiQ</h1>
+        </a>
+
+        <!-- NAV TOGGLE - Checkbox Hack -->
+        <input type="checkbox" id="nav-toggle" class="nav-toggle d-xl-none">
+        <label for="nav-toggle" class="mobile-nav-toggle d-xl-none">
+            <i class="bi bi-list"></i>
+        </label>
+
+        <!-- NAV MENU -->
+        <nav id="navmenu">
+            <ul class="navmenu">
+                <li><a href="#hero" class=>Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#products">Products</a></li>
+            </ul>
+        </nav>
+
+        <!-- RIGHT BUTTONS -->
+        <div class="d-flex gap-3 align-items-center">
+          <div class="search-container d-flex align-items-center position-relative">
+            <input type="text" id="searchInput" class="search-input" placeholder="Cari produk..." />
+            <!-- Tombol Search -->
+            <button id="searchToggle" class="icon-btn circle-icon" title="Search">
+              <i class="bi bi-search"></i>
+            </button>
+          
+            <!-- Input Search ke kiri -->
+        
+            <!-- Delivery Icon -->
+            <button class="icon-btn circle-icon" onclick="window.location.href='delivery.html'" title="Delivery">
+              <i class="bi bi-truck"></i>
+            </button>
+        
+            <!-- Cart Icon with Red Dot -->
+            <button class="icon-btn circle-icon position-relative" onclick="window.location.href='cart.html'" title="Cart">
+              <i class="bi bi-cart"></i>
+              <span class="cart-badge"></span>
+            </button>
+        
+            <!-- PROFILE DROPDOWN BUTTON -->
+            <div class="profile-wrapper position-relative">
+              <button class="icon-btn circle-icon" title="Profile" onclick="toggleProfileDropdown()">
+                <i class="bi bi-person-circle"></i>
+              </button>
+        
+              <!-- Dropdown -->
+              <div class="profile-dropdown" id="profileDropdown">
+                <div class="arrow-up"></div>
+                <div class="dropdown-content">
+                  <a href="login.html">Sign in</a>
+                  <a href="register.html">Create Account</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+    </div>
+ </header>
+  
+
+ <main class="main pt-5">
+    <div style="height: 20px;"></div>
+  
+    <!-- Judul Halaman -->
+    <div class="container mb-4">
+      <h2 class="fw-bold">Aksesoris</h2>
+    </div>
+  
+    <!-- Daftar Produk -->
+    <div class="container">
+      <div class="row g-4">
+        <!-- Produk 1 -->
+        <div class="col-6 col-md-4 col-lg-3">
+          <div class="card shadow-sm product-card">
+            <img src="assets/img/lamp.jpg" class="card-img-top" alt="Lamp">
+            <div class="card-body">
+              <h6 class="fw-bold mb-1">LAMP</h6>
+              <p class="mb-1 text-muted">Rp.900.000</p>
+              <div class="text-warning">★★★★★</div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Produk 2 -->
+        <div class="col-6 col-md-4 col-lg-3">
+          <div class="card shadow-sm product-card">
+            <img src="assets/img/sapu.jpg" class="card-img-top" alt="SAPU">
+            <div class="card-body">
+              <h6 class="fw-bold mb-1">SAPU</h6>
+              <p class="mb-1 text-muted">Rp.150.000</p>
+              <div class="text-warning">★★★★★</div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Produk 3 -->
+        <div class="col-6 col-md-4 col-lg-3">
+          <div class="card shadow-sm product-card">
+            <img src="assets/img/toples.jpg" class="card-img-top" alt="TOPLES">
+            <div class="card-body">
+              <h6 class="fw-bold mb-1">TOPLES</h6>
+              <p class="mb-1 text-muted">Rp.200.000</p>
+              <div class="text-warning">★★★★☆</div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Produk 4 -->
+        <div class="col-6 col-md-4 col-lg-3">
+          <div class="card shadow-sm product-card">
+            <img src="assets/img/sapukecil.jpg" class="card-img-top" alt="SAPU KECIL">
+            <div class="card-body">
+              <h6 class="fw-bold mb-1">SAPU KECIL</h6>
+              <p class="mb-1 text-muted">Rp.70.000</p>
+              <div class="text-warning">★★★★☆</div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Produk 5 -->
+        <div class="col-6 col-md-4 col-lg-3">
+          <div class="card shadow-sm product-card">
+            <img src="assets/img/sabun.jpg" class="card-img-top" alt="SABUN">
+            <div class="card-body">
+              <h6 class="fw-bold mb-1">SABUN</h6>
+              <p class="mb-1 text-muted">Rp.200.000</p>
+              <div class="text-warning">★★★★★</div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Produk 6 -->
+        <div class="col-6 col-md-4 col-lg-3">
+          <div class="card shadow-sm product-card">
+            <img src="assets/img/boxmainan.jpg" class="card-img-top" alt="BOX MAINAN">
+            <div class="card-body">
+              <h6 class="fw-bold mb-1">BOX MAINAN</h6>
+              <p class="mb-1 text-muted">Rp.1.500.000</p>
+              <div class="text-warning">★★★★★</div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Produk 7 -->
+        <div class="col-6 col-md-4 col-lg-3">
+          <div class="card shadow-sm product-card">
+            <img src="assets/img/tempat sampah.png" class="card-img-top" alt="WASTE BIN">
+            <div class="card-body">
+              <h6 class="fw-bold mb-1">WASTE BIN</h6>
+              <p class="mb-1 text-muted">Rp.100.000</p>
+              <div class="text-warning">★★★★★</div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Produk 8 -->
+        <div class="col-6 col-md-4 col-lg-3">
+          <div class="card shadow-sm product-card">
+            <img src="assets/img/tempat sabun.png" class="card-img-top" alt="tempat sabun">
+            <div class="card-body">
+              <h6 class="fw-bold mb-1">SOAP DISPENSER</h6>
+              <p class="mb-1 text-muted">Rp.30.000</p>
+              <div class="text-warning">★★★★★</div>
+            </div>
+          </div>
+        </div>
+
+
+            <div class="col-6 col-md-4 col-lg-3">
+              <div class="card shadow-sm product-card">
+                <img src="assets/img/BATHMAT.png" class="card-img-top" alt="BATHMAT">
+                <div class="card-body">
+                  <h6 class="fw-bold mb-1">BATH MAT</h6>
+                  <p class="mb-1 text-muted">Rp.70.000</p>
+                  <div class="text-warning">★★★★★</div>
+                </div>
+              </div>
+            </div>
+      
+            <!-- Produk 2 -->
+            <div class="col-6 col-md-4 col-lg-3">
+              <div class="card shadow-sm product-card">
+                <img src="assets/img/RESEALABLE BAG.png" class="card-img-top" alt="RESEALABLE">
+                <div class="card-body">
+                  <h6 class="fw-bold mb-1">RESEALABLE BAG</h6>
+                  <p class="mb-1 text-muted">Rp.35.000</p>
+                  <div class="text-warning">★★★★★</div>
+                </div>
+              </div>
+            </div>
+      
+            <!-- Produk 3 -->
+            <div class="col-6 col-md-4 col-lg-3">
+              <div class="card shadow-sm product-card">
+                <img src="assets/img/toples.jpg" class="card-img-top" alt="TOPLES">
+                <div class="card-body">
+                  <h6 class="fw-bold mb-1">TOPLES</h6>
+                  <p class="mb-1 text-muted">Rp.200.000</p>
+                  <div class="text-warning">★★★★☆</div>
+                </div>
+              </div>
+            </div>
+      
+            <!-- Produk 4 -->
+            <div class="col-6 col-md-4 col-lg-3">
+              <div class="card shadow-sm product-card">
+                <img src="assets/img/LAUNDRY BASKET.png" class="card-img-top" alt="LAUNDRY BASKET ">
+                <div class="card-body">
+                  <h6 class="fw-bold mb-1">LAUNDRY BASKET</h6>
+                  <p class="mb-1 text-muted">Rp.75.000</p>
+                  <div class="text-warning">★★★★☆</div>
+                </div>
+              </div>
+            </div>
+      
+            <!-- Produk 5 -->
+            <div class="col-6 col-md-4 col-lg-3">
+              <div class="card shadow-sm product-card">
+                <img src="assets/img/BUCKET SET.png" class="card-img-top" alt="BUCKET">
+                <div class="card-body">
+                  <h6 class="fw-bold mb-1">BUCKET SET</h6>
+                  <p class="mb-1 text-muted">Rp.80.000</p>
+                  <div class="text-warning">★★★★★</div>
+                </div>
+              </div>
+            </div>
+      
+            <!-- Produk 6 -->
+            <div class="col-6 col-md-4 col-lg-3">
+              <div class="card shadow-sm product-card">
+                <img src="assets/img/WASHTUB.png" class="card-img-top" alt="WASHTUB">
+                <div class="card-body">
+                  <h6 class="fw-bold mb-1">WASH TUB</h6>
+                  <p class="mb-1 text-muted">Rp.85.000</p>
+                  <div class="text-warning">★★★★★</div>
+                </div>
+              </div>
+            </div>
+      
+            <!-- Produk 7 -->
+            <div class="col-6 col-md-4 col-lg-3">
+              <div class="card shadow-sm product-card">
+                <img src="assets/img/CLINNINGGLOVES.png" class="card-img-top" alt="CLINNINGGLOVES">
+                <div class="card-body">
+                  <h6 class="fw-bold mb-1">CLINNING GLOVES</h6>
+                  <p class="mb-1 text-muted">Rp.100.000</p>
+                  <div class="text-warning">★★★★★</div>
+                </div>
+              </div>
+            </div>
+      
+            <!-- Produk 8 -->
+            <div class="col-6 col-md-4 col-lg-3">
+              <div class="card shadow-sm product-card">
+                <img src="assets/img/HANGER.png" class="card-img-top" alt="HANGER ">
+                <div class="card-body">
+                  <h6 class="fw-bold mb-1">HANGER</h6>
+                  <p class="mb-1 text-muted">Rp.75.000</p>
+                  <div class="text-warning">★★★★★</div>
+                </div>
+              </div>
+            </div>
+    </main>
+  
+
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="footer-section">
+        <h4><i class="bi bi-box-seam"></i> Orders</h4>
+        <p>Find out when your purchase will arrive or schedule a delivery.</p>
+        <a href="#">Track Order</a> | <a href="#">Schedule Delivery</a>
+      </div>
+      <div class="footer-section">
+        <h4><i class="bi bi-chat-dots"></i> Contact Us & Store Locator</h4>
+        <p>Questions? Text us: <a href="tel:+13127791979">(312) 779-1979</a></p>
+        <a href="#">Chat With Us</a> | <a href="#">Leave Feedback</a> | <a href="#">Find a Store</a>
+      </div>
+      <div class="footer-section">
+        <h4><i class="bi bi-credit-card"></i> Credit Card</h4>
+        <p>Earn Reward Dollars every time you shop*</p>
+        <a href="#">Apply Now</a> | <a href="#">Manage Your Account</a>
+      </div>
+      <div class="footer-section">
+        <h4><i class="bi bi-phone"></i> Our iOS App</h4>
+        <p>Scan to shop exclusive first looks, get alerts & manage registry easier.</p>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/8/8d/Qr-1.png" alt="QR Code" class="qr-code">
+        <br>
+        <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="App Store" class="app-store">
+      </div>
+    </div>
+  
+    <hr>
+  
+    <div class="footer-links">
+      <div class="column">
+        <h5>Help</h5>
+        <ul>
+          <li><a href="#">Customer Service</a></li>
+          <li><a href="#">Account</a></li>
+          <li><a href="#">Return Policy</a></li>
+          <li><a href="#">Shipping Info</a></li>
+          <li><a href="#">Product Recalls</a></li>
+          <li><a href="#">Email & Text Preferences</a></li>
+          <li><a href="#">Sign Up for Texts</a></li>
+        </ul>
+      </div>
+      <div class="column">
+        <h5>Resources</h5>
+        <ul>
+          <li><a href="#">Free Design Services</a></li>
+          <li><a href="#">Wedding Registry</a></li>
+          <li><a href="#">Baby Registry</a></li>
+          <li><a href="#">Gift Cards</a></li>
+          <li><a href="#">Catalogs</a></li>
+          <li><a href="#">Trade Program</a></li>
+          <li><a href="#">Contract Grade Furniture</a></li>
+        </ul>
+      </div>
+      <div class="column">
+        <h5>Our Company</h5>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Responsible Design</a></li>
+          <li><a href="#">Accessibility</a></li>
+        </ul>
+      </div>
+      <div class="column">
+        <h5>Follow Us</h5>
+        <a href="#">#CrateStyle</a> | <a href="#">#CrateKidsStyle</a><br>
+        <div class="social-icons">
+          <i class="bi bi-instagram"></i>
+          <i class="bi bi-tiktok"></i>
+          <i class="bi bi-pinterest"></i>
+          <i class="bi bi-youtube"></i>
+          <i class="bi bi-facebook"></i>
+        </div>
+        <h5>Our Brands</h5>
+        <div class="brands">
+          <span>Crate&Barrel</span>
+          <span>Crate&kids</span>
+          <span>CB2</span>
+          <span>HUDSON</span>
+          <span>GRACE</span>
+        </div>
+      </div>
+    </div>
+  
+    <hr>
+  
+    <div class="footer-bottom">
+      <div class="legal-links">
+        <a href="#">Terms of Use</a>
+        <a href="#">Privacy</a>
+        <a href="#">Site Index</a>
+        <a href="#">Ad Choices</a>
+        <a href="#">Cookie Settings</a>
+        <a href="#">CA Supply Chains Act</a>
+        <a href="#">Do Not Sell My Info</a>
+      </div>
+      <p>&copy;2025 All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+
+  <!-- Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+</body>
+
+</html>

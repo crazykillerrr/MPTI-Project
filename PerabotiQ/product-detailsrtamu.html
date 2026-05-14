@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Product Details</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/animate.css/animate.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+
+</head>
+
+<body class="product-details-page">
+
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+      
+      <a href="index.html" class="logo d-flex align-items-center">
+        <h1 class="sitename">PerabotiQ</h1>
+      </a>
+  
+      <!-- NAV TOGGLE - Checkbox Hack -->
+      <input type="checkbox" id="nav-toggle" class="nav-toggle d-xl-none">
+      <label for="nav-toggle" class="mobile-nav-toggle d-xl-none">
+        <i class="bi bi-list"></i>
+      </label>
+  
+      <!-- NAV MENU -->
+      <nav id="navmenu">
+        <ul class="navmenu">
+          <li><a href="#hero">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#products">Products</a></li>
+        </ul>
+      </nav>
+  
+      <!-- RIGHT BUTTONS -->
+      <div class="search-container">
+        <input type="text" id="searchInput" class="search-input" placeholder="Cari produk..." />
+
+        <div class="d-flex gap-2 align-items-center">
+          <button id="searchToggle" class="btn btn-outline-light" title="Search">
+            <i class="bi bi-search"></i>
+          </button>
+        
+
+  
+          <!-- PROFILE DROPDOWN BUTTON -->
+          <div class="profile-wrapper position-relative">
+            <button class="btn btn-outline-light" title="Profile" onclick="toggleProfileDropdown()">
+              <i class="bi bi-person-circle"></i>
+            </button>
+  
+            <!-- Dropdown -->
+            <div class="profile-dropdown" id="profileDropdown">
+              <div class="arrow-up"></div>
+              <div class="dropdown-content">
+                <a href="login.html">Sign in</a>
+                <a href="register.html">Create Account</a>
+              </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </header>
+  >
+
+  <main class="main">
+
+    <div style="height: 100px;"></div>
+
+    <!-- Page Title -->
+    <div class="page-title dark-background">
+      <div class="container position-relative">
+      </div>
+    </div><!-- End Page Title -->
+
+
+  
+    <!-- Product Details Section -->
+    <section id="product-detail" class="product-detail section">
+      <div class="container">
+        <div class="row align-items-start">
+    
+          <!-- Gambar Produk -->
+          <div class="col-lg-6" data-aos="fade-right">
+             <img src="assets/img/KIVIK.png" alt="VIMLE SOFA" class="img-fluid rounded shadow-sm">
+          </div>
+    
+          <!-- Detail Produk -->
+          <div class="col-lg-6 mt-4 mt-lg-0" data-aos="fade-left">
+            <h2 class="fw-bold">VIMLE SOFA</h2>
+            <h5 class="text-muted mb-3">3-seat sofa, Gunnared medium grey</h5>
+    
+            <p><strong>Product details :</strong></p>
+            <p>
+              Sofa empuk ini akan bertahan lama karena bantalannya diisi dengan busa berketahanan tinggi yang memberikan dukungan yang baik untuk tubuh Anda dan dengan cepat kembali ke bentuk aslinya saat Anda berdiri.
+            </p>
+            <p>
+              Sarung ini terbuat dari kain Gunnared yang diwarnai dengan pewarna sintetis dalam poliester. Ini adalah kain tahan lama dengan nuansa seperti wol, tampilan yang hangat, dan efek melange dua warna. Sarung mudah dibersihkan karena dapat dilepas dan dicuci dengan mesin.
+            </p>
+    
+            <!-- Pilihan Warna -->
+            <div class="mb-3">
+              <label for="warna" class="form-label fw-semibold">Warna</label>
+              <select id="warna" class="form-select w-auto">
+                <option selected>Grey</option>
+                <option>Blue</option>
+                <option>Beige</option>
+              </select>
+            </div>
+    
+            <!-- Atur Jumlah -->
+            <div class="mb-3 d-flex align-items-center gap-3">
+              <label class="form-label fw-semibold mb-0">Atur Jumlah</label>
+              <button class="btn btn-outline-secondary btn-sm rounded-circle" onclick="kurangiJumlah()">-</button>
+              <span id="jumlah" class="px-2">1</span>
+              <button class="btn btn-outline-secondary btn-sm rounded-circle" onclick="tambahJumlah()">+</button>
+            </div>
+    
+            <!-- Harga -->
+            <p class="fw-semibold fs-5 mt-3">Subtotal Pembelian : <span id="subtotal">Rp3.000.000</span></p>
+    
+            <!-- Tombol Add to Cart -->
+            <button class="btn btn-primary px-4 py-2 rounded-pill" style="background-color: #C18888; border: none;">
+              Add to cart
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Script untuk tombol jumlah -->
+
+  <!-- You May Also Like Section (with Slider) -->
+<section class="related-products section py-5">
+  <div class="container position-relative">
+    <h3 class="fw-bold mb-4">You May Also Like</h3>
+
+    <!-- Navigasi kiri -->
+    <button class="btn btn-light position-absolute top-50 start-0 translate-middle-y z-3" id="prevBtn">&#8249;</button>
+
+    <!-- Navigasi kanan -->
+    <button class="btn btn-light position-absolute top-50 end-0 translate-middle-y z-3" id="nextBtn">&#8250;</button>
+
+    <!-- Track slider -->
+    <div class="slider-container overflow-hidden">
+      <div class="slider-track d-flex">
+        <div class="product-card me-3">
+          <div class="card h-100 border-0 shadow-sm text-center">
+            <img src="https://www.ikea.com/sg/en/images/products/gunnemor-throw-off-white-grey-beige__1033634_pe837371_s5.jpg?f=s" class="card-img-top" alt="GUNNEMOR">
+            <div class="card-body">
+              <h6 class="card-title fw-bold">GUNNEMOR</h6>
+              <p class="mb-1">Rp.55.000</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card me-3">
+          <div class="card h-100 border-0 shadow-sm text-center">
+            <img src="https://www.ikea.com/sg/en/images/products/tasjoen-slippers-grey__0668754_pe714677_s5.jpg?f=s" class="card-img-top" alt="SLIPPERS">
+            <div class="card-body">
+              <h6 class="card-title fw-bold">SLIPPERS</h6>
+              <p class="mb-1">Rp.60.000</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card me-3">
+          <div class="card h-100 border-0 shadow-sm text-center">
+            <img src="https://www.ikea.com/sg/en/images/products/loensas-mirror__1383462_pe962566_s5.jpg?f=s" class="card-img-top" alt="LONSAS">
+            <div class="card-body">
+              <h6 class="card-title fw-bold">LONSAS</h6>
+              <p class="mb-1">Rp.110.000</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 4 -->
+        <div class="product-card me-3">
+          <div class="card h-100 border-0 shadow-sm text-center">
+            <img src="https://www.ikea.com/sg/en/images/products/enhet-hanging-mirror-f-frame-anthracite__0917787_pe785976_s5.jpg?f=s" class="card-img-top" alt="ENHET">
+            <div class="card-body">
+              <h6 class="card-title fw-bold">ENHET</h6>
+              <p class="mb-1">Rp.160.000</p>
+            </div>
+          </div>
+        </div>        
+  
+        <div class="product-card me-3">
+          <div class="card h-100 border-0 shadow-sm text-center">
+            <img src="https://www.ikea.com/sg/en/images/products/sindal-door-mat-natural__76475_pe087957_s5.jpg?f=s" class="card-img-top" alt="SINDAL">
+            <div class="card-body">
+              <h6 class="card-title fw-bold">SINDAL</h6>
+              <p class="mb-1">Rp.80.000</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card me-3">
+          <div class="card h-100 border-0 shadow-sm text-center">
+            <img src="https://www.ikea.com/sg/en/images/products/pillemark-door-mat-indoor-rainbow__0806524_pe769979_s5.jpg?f=s" class="card-img-top" alt="PILEMARK">
+            <div class="card-body">
+              <h6 class="card-title fw-bold">PILEMARK</h6>
+              <p class="mb-1">Rp.90.000</p>
+            </div>
+          </div>
+        </div>
+</section>
+
+
+  </main>
+
+
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="footer-section">
+        <h4><i class="bi bi-box-seam"></i> Orders</h4>
+        <p>Find out when your purchase will arrive or schedule a delivery.</p>
+        <a href="#">Track Order</a> | <a href="#">Schedule Delivery</a>
+      </div>
+      <div class="footer-section">
+        <h4><i class="bi bi-chat-dots"></i> Contact Us & Store Locator</h4>
+        <p>Questions? Text us: <a href="tel:+13127791979">(312) 779-1979</a></p>
+        <a href="#">Chat With Us</a> | <a href="#">Leave Feedback</a> | <a href="#">Find a Store</a>
+      </div>
+      <div class="footer-section">
+        <h4><i class="bi bi-credit-card"></i> Credit Card</h4>
+        <p>Earn Reward Dollars every time you shop*</p>
+        <a href="#">Apply Now</a> | <a href="#">Manage Your Account</a>
+      </div>
+      <div class="footer-section">
+        <h4><i class="bi bi-phone"></i> Our iOS App</h4>
+        <p>Scan to shop exclusive first looks, get alerts & manage registry easier.</p>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/8/8d/Qr-1.png" alt="QR Code" class="qr-code">
+        <br>
+        <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="App Store" class="app-store">
+      </div>
+    </div>
+  
+    <hr>
+  
+    <div class="footer-links">
+      <div class="column">
+        <h5>Help</h5>
+        <ul>
+          <li><a href="#">Customer Service</a></li>
+          <li><a href="#">Account</a></li>
+          <li><a href="#">Return Policy</a></li>
+          <li><a href="#">Shipping Info</a></li>
+          <li><a href="#">Product Recalls</a></li>
+          <li><a href="#">Email & Text Preferences</a></li>
+          <li><a href="#">Sign Up for Texts</a></li>
+        </ul>
+      </div>
+      <div class="column">
+        <h5>Resources</h5>
+        <ul>
+          <li><a href="#">Free Design Services</a></li>
+          <li><a href="#">Wedding Registry</a></li>
+          <li><a href="#">Baby Registry</a></li>
+          <li><a href="#">Gift Cards</a></li>
+          <li><a href="#">Catalogs</a></li>
+          <li><a href="#">Trade Program</a></li>
+          <li><a href="#">Contract Grade Furniture</a></li>
+        </ul>
+      </div>
+      <div class="column">
+        <h5>Our Company</h5>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Responsible Design</a></li>
+          <li><a href="#">Accessibility</a></li>
+        </ul>
+      </div>
+      <div class="column">
+        <h5>Follow Us</h5>
+        <a href="#">#CrateStyle</a> | <a href="#">#CrateKidsStyle</a><br>
+        <div class="social-icons">
+          <i class="bi bi-instagram"></i>
+          <i class="bi bi-tiktok"></i>
+          <i class="bi bi-pinterest"></i>
+          <i class="bi bi-youtube"></i>
+          <i class="bi bi-facebook"></i>
+        </div>
+        <h5>Our Brands</h5>
+        <div class="brands">
+          <span>Crate&Barrel</span>
+          <span>Crate&kids</span>
+          <span>CB2</span>
+          <span>HUDSON</span>
+          <span>GRACE</span>
+        </div>
+      </div>
+    </div>
+  
+    <hr>
+  
+    <div class="footer-bottom">
+      <div class="legal-links">
+        <a href="#">Terms of Use</a>
+        <a href="#">Privacy</a>
+        <a href="#">Site Index</a>
+        <a href="#">Ad Choices</a>
+        <a href="#">Cookie Settings</a>
+        <a href="#">CA Supply Chains Act</a>
+        <a href="#">Do Not Sell My Info</a>
+      </div>
+      <p>&copy;2025 All rights reserved.</p>
+    </div>
+  </footer>
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+
+  <!-- Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+</body>
+
+</html>
