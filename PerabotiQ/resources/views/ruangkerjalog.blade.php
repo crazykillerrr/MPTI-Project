@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Product Details</title>
+  <title>PerabotiQ - Ruang Kerja</title>
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -12,12 +12,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/animate.css/animate.min.css" rel="stylesheet">
+  <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="/assets/vendor/animate.css/animate.min.css" rel="stylesheet">
 
   <!-- Main CSS File -->
-  <link href="assets/css/main.css" rel="stylesheet">
+  <link href="/assets/css/main.css" rel="stylesheet">
 
 
 </head>
@@ -58,7 +58,7 @@
             <!-- Input Search ke kiri -->
         
             <!-- Delivery Icon -->
-            <button class="icon-btn circle-icon" onclick="window.location.href='delivery.html'" title="Delivery">
+            <button class="icon-btn circle-icon" onclick="window.location.href='{{ route('customer.pesanan') }}'" title="Pesanan Saya">
               <i class="bi bi-truck"></i>
             </button>
         
@@ -84,7 +84,11 @@
                 @auth
                   <a href="#" style="font-weight: bold; pointer-events: none; color: #d66428;">Hi, {{ explode(' ', Auth::user()->name)[0] }}</a>
                   @if(Auth::user()->role === 'admin')
-                  <a href="{{ route('admin.index') }}" style="color: #0d6efd; font-weight: 500;">Dashboard Admin</a>
+                  <a href="{{ route('admin.dashboard') }}" style="color: #0d6efd; font-weight: 500;">Dashboard Admin</a>
+                  @endif
+                  @if(Auth::user()->role === 'customer')
+                  <a href="{{ route('customer.pesanan') }}" style="color: #333;"><i class="bi bi-box-seam me-1"></i> Pesanan Saya</a>
+                  <a href="{{ route('keranjang') }}" style="color: #333;"><i class="bi bi-cart3 me-1"></i> Keranjang</a>
                   @endif
                   <form action="{{ route('logout') }}" method="POST" style="margin: 0; padding: 0;">
                     @csrf
@@ -111,200 +115,46 @@
   
     <!-- Daftar Produk -->
     <div class="container">
+      @if(session('success'))
+          <div class="alert alert-success">{{ session('success') }}</div>
+      @endif
+      @if(session('error'))
+          <div class="alert alert-danger">{{ session('error') }}</div>
+      @endif
+
       <div class="row g-4">
-        <!-- Produk 1 -->
+        @forelse($products as $p)
         <div class="col-6 col-md-4 col-lg-3">
-          <div class="card shadow-sm product-card">
-            <img src="assets/img/hazel.jpg" class="card-img-top" alt="KASUR">
-            <div class="card-body">
-              <h6 class="fw-bold mb-1">HAZEL</h6>
-              <p class="mb-1 text-muted">Rp.3.200.000</p>
-              <div class="text-warning">★★★★★</div>
+          <div class="card shadow-sm product-card h-100">
+            <a href="{{ route('produk.detail', $p->id) }}"><img src="/{{ $p->gambar }}" class="card-img-top" alt="{{ $p->nama }}" style="height: 200px; object-fit: cover; cursor: pointer;"></a>
+            <div class="card-body d-flex flex-column">
+              <a href="{{ route('produk.detail', $p->id) }}" style="text-decoration: none; color: inherit;"><h6 class="fw-bold mb-1">{{ $p->nama }}</h6></a>
+              <p class="mb-1 text-muted">Rp {{ number_format($p->harga, 0, ',', '.') }}</p>
+              @if($p->stok > 0)
+                <p class="mb-2 text-success" style="font-size: 0.85rem; font-weight: 500;"><i class="bi bi-check-circle"></i> Stok Tersedia ({{ $p->stok }})</p>
+              @else
+                <p class="mb-2 text-danger" style="font-size: 0.85rem; font-weight: 500;"><i class="bi bi-x-circle"></i> Stok Kosong</p>
+              @endif
+              <form action="{{ route('keranjang.tambah') }}" method="POST" class="mt-auto">
+                @csrf
+                <input type="hidden" name="produk_id" value="{{ $p->id }}">
+                <input type="hidden" name="quantity" value="1">
+                @if($p->stok > 0)
+                  <button type="submit" class="btn btn-outline-primary btn-sm w-100"><i class="bi bi-cart-plus"></i> Keranjang</button>
+                @else
+                  <button type="button" class="btn btn-secondary btn-sm w-100" disabled>Habis</button>
+                @endif
+              </form>
             </div>
           </div>
         </div>
-  
-        <!-- Produk 2 -->
-        <div class="col-6 col-md-4 col-lg-3">
-          <div class="card shadow-sm product-card">
-            <img src="assets/img/umura kursi.jpg" class="card-img-top" alt="SMEDSTORP">
-            <div class="card-body">
-              <h6 class="fw-bold mb-1">UMURA KURSI</h6>
-              <p class="mb-1 text-muted">Rp.2.000.000</p>
-              <div class="text-warning">★★★★★</div>
-            </div>
-          </div>
+        @empty
+        <div class="col-12 text-center py-5">
+            <p class="text-muted">Belum ada produk di kategori ini.</p>
         </div>
-  
-        <!-- Produk 3 -->
-        <div class="col-6 col-md-4 col-lg-3">
-          <div class="card shadow-sm product-card">
-            <img src="assets/img/rak.jpg" class="card-img-top" alt="LANGARYD">
-            <div class="card-body">
-              <h6 class="fw-bold mb-1">RAK</h6>
-              <p class="mb-1 text-muted">Rp.800.000</p>
-              <div class="text-warning">★★★★☆</div>
-            </div>
-          </div>
-        </div>
-  
-        <!-- Produk 4 -->
-        <div class="col-6 col-md-4 col-lg-3">
-          <div class="card shadow-sm product-card">
-            <img src="assets/img/helmer.jpg" class="card-img-top" alt="VIMLE">
-            <div class="card-body">
-              <h6 class="fw-bold mb-1">HELMER</h6>
-              <p class="mb-1 text-muted">Rp.500.000</p>
-              <div class="text-warning">★★★★☆</div>
-            </div>
-          </div>
-        </div>
-  
-        <!-- Produk 5 -->
-        <div class="col-6 col-md-4 col-lg-3">
-          <div class="card shadow-sm product-card">
-            <img src="assets/img/meja metal.jpg" class="card-img-top" alt="TORNSBORG">
-            <div class="card-body">
-              <h6 class="fw-bold mb-1">MEJA METAL</h6>
-              <p class="mb-1 text-muted">Rp.2.500.000</p>
-              <div class="text-warning">★★★★★</div>
-            </div>
-          </div>
-        </div>
-  
-        <!-- Produk 6 -->
-        <div class="col-6 col-md-4 col-lg-3">
-          <div class="card shadow-sm product-card">
-            <img src="assets/img/kursi sheild.jpg" class="card-img-top" alt="LANDSKORNA">
-            <div class="card-body">
-              <h6 class="fw-bold mb-1">KURSI SHEILD</h6>
-              <p class="mb-1 text-muted">Rp.400.000</p>
-              <div class="text-warning">★★★★★</div>
-            </div>
-          </div>
-        </div>
-  
-        <!-- Produk 7 -->
-        <div class="col-6 col-md-4 col-lg-3">
-          <div class="card shadow-sm product-card">
-            <img src="assets/img/cabinet.jpg" class="card-img-top" alt="STOCKHOLM">
-            <div class="card-body">
-              <h6 class="fw-bold mb-1">CABINET METAL</h6>
-              <p class="mb-1 text-muted">Rp.3.500.000</p>
-              <div class="text-warning">★★★★★</div>
-            </div>
-          </div>
-        </div>
-  
-        <!-- Produk 8 -->
-        <div class="col-6 col-md-4 col-lg-3">
-          <div class="card shadow-sm product-card">
-            <img src="assets/img/malmo.jpg" class="card-img-top" alt="LART">
-            <div class="card-body">
-              <h6 class="fw-bold mb-1">MALMO</h6>
-              <p class="mb-1 text-muted">Rp.1.500.000</p>
-              <div class="text-warning">★★★★★</div>
-            </div>
-          </div>
-        </div>
-  
-        <div class="col-6 col-md-4 col-lg-3">
-          <div class="card shadow-sm product-card">
-            <img src="assets/img/TROTTEN.png" class="card-img-top" alt="TROTTEN">
-            <div class="card-body">
-              <h6 class="fw-bold mb-1">TROTTEN</h6>
-              <p class="mb-1 text-muted">Rp.1.500.000</p>
-              <div class="text-warning">★★★★★</div>
-            </div>
-          </div>
-        </div>
-  
-        <!-- Produk 2 -->
-        <div class="col-6 col-md-4 col-lg-3">
-          <div class="card shadow-sm product-card">
-            <img src="assets/img/MICKE.png" class="card-img-top" alt="MICKE">
-            <div class="card-body">
-              <h6 class="fw-bold mb-1">MICKE</h6>
-              <p class="mb-1 text-muted">Rp.2.100.000</p>
-              <div class="text-warning">★★★★★</div>
-            </div>
-          </div>
-        </div>
-  
-        <!-- Produk 3 -->
-        <div class="col-6 col-md-4 col-lg-3">
-          <div class="card shadow-sm product-card">
-            <img src="assets/img/MITTZON.png" class="card-img-top" alt="MITTZON">
-            <div class="card-body">
-              <h6 class="fw-bold mb-1">MITTZON</h6>
-              <p class="mb-1 text-muted">Rp.3.300.000</p>
-              <div class="text-warning">★★★★☆</div>
-            </div>
-          </div>
-        </div>
-  
-        <!-- Produk 4 -->
-        <div class="col-6 col-md-4 col-lg-3">
-          <div class="card shadow-sm product-card">
-            <img src="assets/img/FLINTAN.png" class="card-img-top" alt="FLINTAN">
-            <div class="card-body">
-              <h6 class="fw-bold mb-1">FLINTAN</h6>
-              <p class="mb-1 text-muted">Rp.800.000</p>
-              <div class="text-warning">★★★★☆</div>
-            </div>
-          </div>
-        </div>
-  
-        <!-- Produk 5 -->
-        <div class="col-6 col-md-4 col-lg-3">
-          <div class="card shadow-sm product-card">
-            <img src="assets/img/LIDKULLEN.png" class="card-img-top" alt="LIDKULLEN">
-            <div class="card-body">
-              <h6 class="fw-bold mb-1">LIDKULLEN</h6>
-              <p class="mb-1 text-muted">Rp.1.500.000</p>
-              <div class="text-warning">★★★★★</div>
-            </div>
-          </div>
-        </div>
-  
-        <!-- Produk 6 -->
-        <div class="col-6 col-md-4 col-lg-3">
-          <div class="card shadow-sm product-card">
-            <img src="assets/img/LAKTARE.png" class="card-img-top" alt="LAKTARE">
-            <div class="card-body">
-              <h6 class="fw-bold mb-1">LAKTARE</h6>
-              <p class="mb-1 text-muted">Rp.1.200.000</p>
-              <div class="text-warning">★★★★★</div>
-            </div>
-          </div>
-        </div>
-  
-        <!-- Produk 7 -->
-        <div class="col-6 col-md-4 col-lg-3">
-          <div class="card shadow-sm product-card">
-            <img src="assets/img/FJALLBERGET.png" class="card-img-top" alt="FJALLBERGET">
-            <div class="card-body">
-              <h6 class="fw-bold mb-1">FJALLBERGET</h6>
-              <p class="mb-1 text-muted">Rp.3.600.000</p>
-              <div class="text-warning">★★★★★</div>
-            </div>
-          </div>
-        </div>
-  
-        <!-- Produk 8 -->
-        <div class="col-6 col-md-4 col-lg-3">
-          <div class="card shadow-sm product-card">
-            <img src="assets/img/GALANT.png" class="card-img-top" alt="GALANT">
-            <div class="card-body">
-              <h6 class="fw-bold mb-1">GALANT</h6>
-              <p class="mb-1 text-muted">Rp.3.300.000</p>
-              <div class="text-warning">★★★★★</div>
-            </div>
-          </div>
-        </div>
+        @endforelse
       </div>
     </div>
-
   </main>
   
 
@@ -414,11 +264,11 @@
   <div id="preloader"></div>
 
   <!-- Vendor JS Files -->
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 
   <!-- Main JS File -->
-  <script src="assets/js/main.js"></script>
+  <script src="/assets/js/main.js"></script>
 
 </body>
 

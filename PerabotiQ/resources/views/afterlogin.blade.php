@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Index</title>
+  <title>PerabotiQ - Dashboard</title>
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -12,12 +12,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/animate.css/animate.min.css" rel="stylesheet">
+  <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="/assets/vendor/animate.css/animate.min.css" rel="stylesheet">
 
   <!-- Main CSS File -->
-  <link href="assets/css/main.css" rel="stylesheet">
+  <link href="/assets/css/main.css" rel="stylesheet">
 
 </head>
 
@@ -57,7 +57,7 @@
                 <!-- Input Search ke kiri -->
             
                 <!-- Delivery Icon -->
-                <button class="icon-btn circle-icon" onclick="window.location.href='melacak.html'" title="Delivery">
+                <button class="icon-btn circle-icon" onclick="window.location.href='{{ route('customer.pesanan') }}'" title="Pesanan Saya">
                   <i class="bi bi-truck"></i>
                 </button>
             
@@ -83,7 +83,11 @@
                 @auth
                   <a href="#" style="font-weight: bold; pointer-events: none; color: #d66428;">Hi, {{ explode(' ', Auth::user()->name)[0] }}</a>
                   @if(Auth::user()->role === 'admin')
-                  <a href="{{ route('admin.index') }}" style="color: #0d6efd; font-weight: 500;">Dashboard Admin</a>
+                  <a href="{{ route('admin.dashboard') }}" style="color: #0d6efd; font-weight: 500;">Dashboard Admin</a>
+                  @endif
+                  @if(Auth::user()->role === 'customer')
+                  <a href="{{ route('customer.pesanan') }}" style="color: #333;"><i class="bi bi-box-seam me-1"></i> Pesanan Saya</a>
+                  <a href="{{ route('keranjang') }}" style="color: #333;"><i class="bi bi-cart3 me-1"></i> Keranjang</a>
                   @endif
                   <form action="{{ route('logout') }}" method="POST" style="margin: 0; padding: 0;">
                     @csrf
@@ -193,7 +197,7 @@
             <!-- Product 1 -->
             <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
               <div class="product-item position-relative p-0 overflow-hidden">
-                <a href="ruangtamulog.html">
+                <a href="{{ route('produk.kategori.login', 'ruang-tamu') }}">
                   <img src="https://p4.wallpaperbetter.com/wallpaper/274/668/983/fabulous-living-room-living-room-set-wallpaper-preview.jpg" alt="Product 1" class="product-img">
                 </a>
               </div>
@@ -204,7 +208,7 @@
              <!-- Product 2 -->
              <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
               <div class="product-item position-relative p-0 overflow-hidden">
-                <a href="ruangtidurlog.html">
+                <a href="{{ route('produk.kategori.login', 'ruang-tidur') }}">
                   <img src="https://4.bp.blogspot.com/-9DENORtzjAY/WSkxS07HpmI/AAAAAAAAAvk/ZDigDqEydZEu5Tj1Vb8g7QXOSykMvWxZQCLcB/s1600/Desain%2BKamar%2BTidur%2BUtama%2BMinimalis%2BUkuran%2B3x4.jpg" alt="Product 1" class="product-img">
                 </a>
               </div>
@@ -214,7 +218,7 @@
             <!-- Product 3 -->
             <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
               <div class="product-item position-relative p-0 overflow-hidden">
-                <a href="ruangmakanlog.html">
+                <a href="{{ route('produk.kategori.login', 'ruang-makan') }}">
                   <img src="https://i.pinimg.com/originals/ee/89/74/ee8974954744d6347a404b45e10d35ea.png"  alt="Product 3" class="product-img">
                 </a>
               </div>
@@ -224,7 +228,7 @@
             <!-- Product 4 -->
             <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
               <div class="product-item position-relative p-0 overflow-hidden">
-                <a href="ruangkerjalog.html">
+                <a href="{{ route('produk.kategori.login', 'ruang-kerja') }}">
                   <img src="https://d3p0bla3numw14.cloudfront.net/news-content/img/2021/08/02173644/Ruang-Kerja-Minimalis-di-Sudut-Ruangan.jpg" alt="Product 4" class="product-img">
                 </a>
               </div>
@@ -234,7 +238,7 @@
             <!-- Product 5 -->
             <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
               <div class="product-item position-relative p-0 overflow-hidden">
-                <a href="kamarmandilog.html">
+                <a href="{{ route('produk.kategori.login', 'kamar-mandi') }}">
                   <img src="https://1.bp.blogspot.com/-BVaruwh-vG8/Vqm5qBicKaI/AAAAAAAAAVY/MOJVzOuYgI4/s1600/Interior%2BKamar%2BMandi.jpg" alt="Product 5" class="product-img">
                 </a>
               </div>
@@ -244,7 +248,7 @@
             <!-- Product 6 -->
             <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
               <div class="product-item position-relative p-0 overflow-hidden">
-                <a href="aksesorislog.html">
+                <a href="{{ route('produk.kategori.login', 'aksesoris') }}">
                   <img src="https://ds393qgzrxwzn.cloudfront.net/cat1/img/images/0/USU5Nx4RlN.jpg" alt="Product 6" class="product-img">
                 </a>
               </div>
@@ -362,10 +366,10 @@
   <div id="preloader"></div>
 
   <!-- Vendor JS Files -->
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <!-- Main JS File -->
-  <script src="assets/js/main.js"></script>
+  <script src="/assets/js/main.js"></script>
 
 </body>
 

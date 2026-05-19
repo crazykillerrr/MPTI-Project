@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Index</title>
+  <title>PerabotiQ - Pesanan Saya</title>
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -12,12 +12,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/animate.css/animate.min.css" rel="stylesheet">
+  <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="/assets/vendor/animate.css/animate.min.css" rel="stylesheet">
 
   <!-- Main CSS File -->
-  <link href="assets/css/main.css" rel="stylesheet">
+  <link href="/assets/css/main.css" rel="stylesheet">
 
 </head>
 
@@ -57,7 +57,7 @@
                 <!-- Input Search ke kiri -->
             
                 <!-- Delivery Icon -->
-                <button class="icon-btn circle-icon" onclick="window.location.href='delivery.html'" title="Delivery">
+                <button class="icon-btn circle-icon" onclick="window.location.href='{{ route('customer.pesanan') }}'" title="Pesanan Saya">
                   <i class="bi bi-truck"></i>
                 </button>
             
@@ -83,7 +83,11 @@
                 @auth
                   <a href="#" style="font-weight: bold; pointer-events: none; color: #d66428;">Hi, {{ explode(' ', Auth::user()->name)[0] }}</a>
                   @if(Auth::user()->role === 'admin')
-                  <a href="{{ route('admin.index') }}" style="color: #0d6efd; font-weight: 500;">Dashboard Admin</a>
+                  <a href="{{ route('admin.dashboard') }}" style="color: #0d6efd; font-weight: 500;">Dashboard Admin</a>
+                  @endif
+                  @if(Auth::user()->role === 'customer')
+                  <a href="{{ route('customer.pesanan') }}" style="color: #333;"><i class="bi bi-box-seam me-1"></i> Pesanan Saya</a>
+                  <a href="{{ route('keranjang') }}" style="color: #333;"><i class="bi bi-cart3 me-1"></i> Keranjang</a>
                   @endif
                   <form action="{{ route('logout') }}" method="POST" style="margin: 0; padding: 0;">
                     @csrf
@@ -101,32 +105,132 @@
   
 
  <main class="main">
-  <div class="container py-5">
-    <h2 class="fw-bold text-center mb-4">Daftar Pesanan</h2>
+  <div class="container py-5" style="margin-top: 60px;">
+    <h2 class="fw-bold text-center mb-2">Pesanan Saya</h2>
+    <p class="text-center text-muted mb-4">Lacak dan lihat riwayat pesanan Anda</p>
 
     <!-- Filter Buttons -->
     <div class="filter-container d-flex justify-content-center flex-wrap gap-2 mb-4">
-      <button class="filter-btn active">All</button>
-      <button class="filter-btn">Waiting For Confirmation</button>
-      <button class="filter-btn">Waiting For Delivery</button>
-      <button class="filter-btn">Sent</button>
-      <button class="filter-btn">Finished</button>
-      <button class="filter-btn">Canceled</button>
+      <button class="filter-btn active" data-status="all" onclick="filterPesanan(this, 'all')">Semua</button>
+      <button class="filter-btn" data-status="menunggu_pembayaran" onclick="filterPesanan(this, 'menunggu_pembayaran')">Menunggu Pembayaran</button>
+      <button class="filter-btn" data-status="diproses" onclick="filterPesanan(this, 'diproses')">Diproses</button>
+      <button class="filter-btn" data-status="dikirim" onclick="filterPesanan(this, 'dikirim')">Dikirim</button>
+      <button class="filter-btn" data-status="selesai" onclick="filterPesanan(this, 'selesai')">Selesai</button>
+      <button class="filter-btn" data-status="dibatalkan" onclick="filterPesanan(this, 'dibatalkan')">Dibatalkan</button>
     </div>
 
-    
+    @if(session('success'))
+      <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+    @if(session('error'))
+      <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
 
-    <!-- Empty State -->
-    <div class="empty-state text-center py-5">
-      <div class="cart-icon mb-4">
-        <img src="assets/images/cart-empty.png" alt="Empty Cart" class="cart-img">
+    <div id="pesanan-list">
+    @forelse($pesanan as $p)
+    @php
+      $statusColor = match($p->status) {
+        'menunggu_pembayaran' => 'warning',
+        'diproses' => 'info',
+        'dikirim' => 'primary',
+        'selesai' => 'success',
+        'dibatalkan' => 'danger',
+        default => 'secondary',
+      };
+      $statusLabel = match($p->status) {
+        'menunggu_pembayaran' => 'Menunggu Pembayaran',
+        'diproses' => 'Sedang Diproses',
+        'dikirim' => 'Sedang Dikirim',
+        'selesai' => 'Selesai',
+        'dibatalkan' => 'Dibatalkan',
+        default => str_replace('_',' ',ucfirst($p->status)),
+      };
+    @endphp
+    <div class="card shadow-sm mb-3 pesanan-card" data-status="{{ $p->status }}">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <div>
+            <h6 class="fw-bold mb-1"><i class="bi bi-receipt me-1"></i> Pesanan #{{ $p->id }}</h6>
+            <p class="text-muted mb-0" style="font-size:0.85rem;">
+              <i class="bi bi-calendar3 me-1"></i>{{ $p->created_at->format('d M Y, H:i') }}
+            </p>
+          </div>
+          <span class="badge bg-{{ $statusColor }} rounded-pill px-3 py-2">{{ $statusLabel }}</span>
+        </div>
+
+        <hr class="my-2" style="opacity: 0.15;">
+
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <small class="text-muted">{{ $p->detailPesanan->count() }} produk</small>
+            @if($p->metode_pembayaran)
+            <small class="text-muted ms-2">• {{ $p->metode_pembayaran }}</small>
+            @endif
+          </div>
+          <div class="text-end">
+            <span class="fw-bold" style="font-size: 1.05rem;">Rp {{ number_format($p->total,0,',','.') }}</span>
+          </div>
+        </div>
+
+        <div class="mt-3 d-flex gap-2 justify-content-end">
+          <a href="{{ route('customer.pesanan.detail', $p->id) }}" class="btn btn-outline-dark btn-sm rounded-pill px-3">
+            <i class="bi bi-eye me-1"></i> Lihat Detail
+          </a>
+          @if($p->status === 'dikirim')
+          <a href="{{ route('customer.pesanan.detail', $p->id) }}" class="btn btn-primary btn-sm rounded-pill px-3">
+            <i class="bi bi-geo-alt me-1"></i> Lacak Pesanan
+          </a>
+          @endif
+        </div>
       </div>
-      <h4 class="empty-title mb-2">You have never made a transaction.</h4>
-      <p class="empty-text mb-4">Looking for your dream item? Let's shop now!</p>
-      <a href="products.html" class="shop-now-btn">Shop Now</a>
+    </div>
+    @empty
+    <div class="text-center py-5" id="empty-state">
+      <i class="bi bi-inbox" style="font-size: 4rem; color: #ccc;"></i>
+      <h4 class="fw-bold mt-3">Belum ada pesanan</h4>
+      <p class="text-muted mb-4">Yuk, mulai belanja dan temukan produk impianmu!</p>
+      <a href="{{ route('customer.dashboard') }}" class="btn btn-dark rounded-pill px-4 py-2">Mulai Belanja</a>
+    </div>
+    @endforelse
+    </div>
+
+    <!-- Empty filter state (hidden by default) -->
+    <div class="text-center py-5 d-none" id="empty-filter-state">
+      <i class="bi bi-funnel" style="font-size: 3rem; color: #ccc;"></i>
+      <h5 class="fw-bold mt-3">Tidak ada pesanan dengan status ini</h5>
+      <p class="text-muted">Coba pilih filter status yang lain</p>
     </div>
   </div>
 </main>
+
+<script>
+function filterPesanan(btn, status) {
+  // Update active button
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const cards = document.querySelectorAll('.pesanan-card');
+  const emptyFilter = document.getElementById('empty-filter-state');
+  const emptyState = document.getElementById('empty-state');
+  let visibleCount = 0;
+
+  cards.forEach(card => {
+    if (status === 'all' || card.dataset.status === status) {
+      card.style.display = '';
+      visibleCount++;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+
+  // Show/hide empty filter message
+  if (visibleCount === 0 && cards.length > 0) {
+    emptyFilter.classList.remove('d-none');
+  } else {
+    emptyFilter.classList.add('d-none');
+  }
+}
+</script>
 
 
   
@@ -232,10 +336,10 @@
   <div id="preloader"></div>
 
   <!-- Vendor JS Files -->
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <!-- Main JS File -->
-  <script src="assets/js/main.js"></script>
+  <script src="/assets/js/main.js"></script>
 
 </body>
 

@@ -3,63 +3,71 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    public function loginSubmit(Request $request)
+    public function showLogin()
+    {
+        if (Auth::check()) {
+            return $this->redirectByRole(Auth::user()->role);
+        }
+        return view('login');
+    }
+
+    public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
+            'email'    => 'required|email',
+            'password' => 'required',
         ]);
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            
-            // Redirect to home or wherever after login
-            return redirect()->intended('/');
+            return $this->redirectByRole(Auth::user()->role);
         }
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
+        return back()->withErrors(['email' => 'Email atau password salah.'])->onlyInput('email');
     }
 
-    public function registerSubmit(Request $request)
+    private function redirectByRole($role)
+    {
+        return match($role) {
+            'admin'  => redirect()->route('admin.dashboard'),
+            'kurir'  => redirect()->route('kurir.dashboard'),
+            default  => redirect()->route('customer.dashboard'),
+        };
+    }
+
+    public function showRegister()
+    {
+        return view('register');
+    }
+
+    public function register(Request $request)
     {
         $request->validate([
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['nullable', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8'],
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users',
+            'password' => 'required|min:6|confirmed',
         ]);
 
-        $name = $request->first_name;
-        if ($request->last_name) {
-            $name .= ' ' . $request->last_name;
-        }
-
-        $user = User::create([
-            'name' => $name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+        User::create([
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'password' => bcrypt($request->password),
+            'role'     => 'customer',
         ]);
 
-        Auth::login($user);
-
-        return redirect('/');
+        return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan login.');
     }
 
     public function logout(Request $request)
     {
         Auth::logout();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-
         return redirect('/');
     }
 }

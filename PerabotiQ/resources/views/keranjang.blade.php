@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Cart - PerabotiQ</title>
+  <title>PerabotiQ - Keranjang</title>
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -12,12 +12,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/animate.css/animate.min.css" rel="stylesheet">
+  <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="/assets/vendor/animate.css/animate.min.css" rel="stylesheet">
 
   <!-- Main CSS File -->
-  <link href="assets/css/main.css" rel="stylesheet">
+  <link href="/assets/css/main.css" rel="stylesheet">
 </head>
 
 <body class="index-page">
@@ -43,16 +43,19 @@
         </ul>
       </nav>
   
-      <!-- RIGHT BUTTONS -->
-      <div class="search-container">
-        <input type="text" id="searchInput" class="search-input" placeholder="Cari produk..." />
-
-        <div class="d-flex gap-2 align-items-center">
-          <button id="searchToggle" class="btn btn-outline-light" title="Search">
+      <!-- RIGHT BUTTONS (login style) -->
+      <div class="d-flex gap-3 align-items-center">
+        <div class="search-container d-flex align-items-center position-relative">
+          <input type="text" id="searchInput" class="search-input" placeholder="Cari produk..." />
+          <button id="searchToggle" class="icon-btn circle-icon" title="Search">
             <i class="bi bi-search"></i>
           </button>
-        
-  
+      
+          <!-- Delivery Icon -->
+          <button class="icon-btn circle-icon" onclick="window.location.href='{{ route('customer.pesanan') }}'" title="Pesanan Saya">
+            <i class="bi bi-truck"></i>
+          </button>
+      
           <!-- CART BUTTON -->
           <button class="btn btn-outline-light" onclick="window.location.href='/keranjang'" title="Cart">
             <i class="bi bi-cart"></i>
@@ -60,22 +63,21 @@
 
           <!-- PROFILE DROPDOWN BUTTON -->
           <div class="profile-wrapper position-relative">
-            <button class="btn btn-outline-light" title="Profile" onclick="toggleProfileDropdown()">
+            <button class="icon-btn circle-icon" title="Profile" onclick="toggleProfileDropdown()">
               <i class="bi bi-person-circle"></i>
             </button>
-  
-            <!-- Dropdown -->
+      
             <div class="profile-dropdown" id="profileDropdown">
               <div class="arrow-up"></div>
-                                          <div class="dropdown-content">
-                @guest
-                  <a href="/login">Sign in</a>
-                  <a href="/register">Create Account</a>
-                @endguest
+              <div class="dropdown-content">
                 @auth
                   <a href="#" style="font-weight: bold; pointer-events: none; color: #d66428;">Hi, {{ explode(' ', Auth::user()->name)[0] }}</a>
                   @if(Auth::user()->role === 'admin')
-                  <a href="{{ route('admin.index') }}" style="color: #0d6efd; font-weight: 500;">Dashboard Admin</a>
+                  <a href="{{ route('admin.dashboard') }}" style="color: #0d6efd; font-weight: 500;">Dashboard Admin</a>
+                  @endif
+                  @if(Auth::user()->role === 'customer')
+                  <a href="{{ route('customer.pesanan') }}" style="color: #333;"><i class="bi bi-box-seam me-1"></i> Pesanan Saya</a>
+                  <a href="{{ route('keranjang') }}" style="color: #333;"><i class="bi bi-cart3 me-1"></i> Keranjang</a>
                   @endif
                   <form action="{{ route('logout') }}" method="POST" style="margin: 0; padding: 0;">
                     @csrf
@@ -83,10 +85,11 @@
                   </form>
                 @endauth
               </div>
+            </div>
           </div>
         </div>
       </div>
-      
+
     </div>
   </header><main class="main">
     <div class="container py-5 mt-5">
@@ -123,8 +126,9 @@
                         <span class="fw-bold mb-2">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                         <div class="d-flex align-items-center">
                           <span class="me-3">Qty: {{ $item->quantity }}</span>
-                          <form action="{{ route('cart.destroy', $item->id) }}" method="POST">
+                          <form action="{{ route('keranjang.hapus') }}" method="POST">
                             @csrf
+                            <input type="hidden" name="keranjang_id" value="{{ $item->id }}">
                             <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Hapus produk ini dari keranjang?');"><i class="bi bi-trash"></i></button>
                           </form>
                         </div>
@@ -151,7 +155,7 @@
               <p>Subtotal (<span id="item-count">{{ isset($totalItems) ? $totalItems : 0 }}</span> produk)</p>
               <h5 class="fw-bold mb-4">Rp<span id="total-price">{{ isset($totalPrice) ? number_format($totalPrice, 0, ',', '.') : 0 }}</span></h5>
               
-              <button class="btn btn-primary w-100" {{ (!isset($cartItems) || $cartItems->count() == 0) ? 'disabled' : '' }}>Lanjut ke Pembayaran</button>
+              <a href="{{ route('checkout') }}" class="btn btn-primary w-100" {{ (!isset($cartItems) || $cartItems->count() == 0) ? 'style=pointer-events:none;opacity:0.5' : '' }}>Lanjut ke Pembayaran</a>
             </div>
           </div>
         </div>
@@ -264,10 +268,10 @@
   <div id="preloader"></div>
 
   <!-- Vendor JS Files -->
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <!-- Main JS File -->
-  <script src="assets/js/main.js"></script>
+  <script src="/assets/js/main.js"></script>
 </body>
 
 </html>

@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Product Details</title>
+  <title>PerabotiQ - Ruang Kerja</title>
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -12,12 +12,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/animate.css/animate.min.css" rel="stylesheet">
+  <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="/assets/vendor/animate.css/animate.min.css" rel="stylesheet">
 
   <!-- Main CSS File -->
-  <link href="assets/css/main.css" rel="stylesheet">
+  <link href="/assets/css/main.css" rel="stylesheet">
 
 
 </head>
@@ -78,7 +78,7 @@
                 @auth
                   <a href="#" style="font-weight: bold; pointer-events: none; color: #d66428;">Hi, {{ explode(' ', Auth::user()->name)[0] }}</a>
                   @if(Auth::user()->role === 'admin')
-                  <a href="{{ route('admin.index') }}" style="color: #0d6efd; font-weight: 500;">Dashboard Admin</a>
+                  <a href="{{ route('admin.dashboard') }}" style="color: #0d6efd; font-weight: 500;">Dashboard Admin</a>
                   @endif
                   <form action="{{ route('logout') }}" method="POST" style="margin: 0; padding: 0;">
                     @csrf
@@ -115,18 +115,18 @@
           @forelse($products as $p)
           <div class="col-6 col-md-4 col-lg-3">
             <div class="card shadow-sm product-card h-100">
-              <a href="{{ route('product.details', $p->id) }}"><img src="/{{ $p->image }}" class="card-img-top" alt="{{ $p->name }}" style="height: 200px; object-fit: cover; cursor: pointer;"></a>
+              <a href="{{ route('produk.detail', $p->id) }}"><img src="/{{ $p->image }}" class="card-img-top" alt="{{ $p->name }}" style="height: 200px; object-fit: cover; cursor: pointer;"></a>
               <div class="card-body d-flex flex-column">
-                <a href="{{ route('product.details', $p->id) }}" style="text-decoration: none; color: inherit; cursor: pointer;"><h6 class="fw-bold mb-1">{{ $p->name }}</h6></a>
+                <a href="{{ route('produk.detail', $p->id) }}" style="text-decoration: none; color: inherit; cursor: pointer;"><h6 class="fw-bold mb-1">{{ $p->name }}</h6></a>
                 <p class="mb-1 text-muted">Rp {{ number_format($p->price, 0, ',', '.') }}</p>
                                 @if($p->stock > 0)
                   <p class="mb-2 text-success" style="font-size: 0.85rem; font-weight: 500;"><i class="bi bi-check-circle"></i> Stok Tersedia ({{ $p->stock }})</p>
                 @else
                   <p class="mb-2 text-danger" style="font-size: 0.85rem; font-weight: 500;"><i class="bi bi-x-circle"></i> Stok Kosong</p>
                 @endif
-                <form action="{{ route('cart.add') }}" method="POST" class="mt-auto">
+                <form action="{{ route('keranjang.tambah') }}" method="POST" class="mt-auto">
                   @csrf
-                  <input type="hidden" name="product_id" value="{{ $p->id }}">
+                  <input type="hidden" name="produk_id" value="{{ $p->id }}">
                   <input type="hidden" name="quantity" value="1">
                   @if($p->stock > 0)
                     <button type="submit" class="btn btn-outline-primary btn-sm w-100"><i class="bi bi-cart-plus"></i> Keranjang</button>
@@ -258,11 +258,11 @@
   <div id="preloader"></div>
 
   <!-- Vendor JS Files -->
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 
   <!-- Main JS File -->
-  <script src="assets/js/main.js"></script>
+  <script src="/assets/js/main.js"></script>
 
 </body>
 

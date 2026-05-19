@@ -46,7 +46,7 @@
             <small class="text-muted">Biarkan kosong jika tidak ingin mengubah gambar.</small>
           </div>
           <button type="submit" class="btn btn-primary">Update</button>
-          <a href="{{ route('admin.index') }}" class="btn btn-secondary">Batal</a>
+          <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">Batal</a>
         </form>
       </div>
     </div>

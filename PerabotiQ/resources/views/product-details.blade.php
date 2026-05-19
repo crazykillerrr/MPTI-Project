@@ -4,31 +4,34 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>{{ $product->name }} - PerabotiQ</title>
+  <title>PerabotiQ - {{ $product->nama }}</title>
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="/assets/vendor/animate.css/animate.min.css" rel="stylesheet">
 
-  
+  <!-- Main CSS File -->
+  <link href="/assets/css/main.css" rel="stylesheet">
 </head>
 
-<body>
+<body class="product-details-page">
 
-  <!-- HEADER -->
-      <header id="header" class="header d-flex align-items-center fixed-top">
+  {{-- ========== HEADER: GUEST (sebelum login) ========== --}}
+  @guest
+  <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
       
       <a href="/" class="logo d-flex align-items-center">
         <h1 class="sitename">PerabotiQ</h1>
       </a>
   
-      <!-- NAV TOGGLE - Checkbox Hack -->
+      <!-- NAV TOGGLE -->
       <input type="checkbox" id="nav-toggle" class="nav-toggle d-xl-none">
       <label for="nav-toggle" class="mobile-nav-toggle d-xl-none">
         <i class="bi bi-list"></i>
@@ -37,21 +40,19 @@
       <!-- NAV MENU -->
       <nav id="navmenu">
         <ul class="navmenu">
-          <li><a href="#hero">Home</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#products">Products</a></li>
+          <li><a href="/">Home</a></li>
+          <li><a href="/#about">About</a></li>
+          <li><a href="/#products">Products</a></li>
         </ul>
       </nav>
   
       <!-- RIGHT BUTTONS -->
       <div class="search-container">
         <input type="text" id="searchInput" class="search-input" placeholder="Cari produk..." />
-
         <div class="d-flex gap-2 align-items-center">
           <button id="searchToggle" class="btn btn-outline-light" title="Search">
             <i class="bi bi-search"></i>
           </button>
-        
   
           <!-- CART BUTTON -->
           <button class="btn btn-outline-light" onclick="window.location.href='/keranjang'" title="Cart">
@@ -67,102 +68,202 @@
             <!-- Dropdown -->
             <div class="profile-dropdown" id="profileDropdown">
               <div class="arrow-up"></div>
-                                          <div class="dropdown-content">
-                @guest
-                  <a href="/login">Sign in</a>
-                  <a href="/register">Create Account</a>
-                @endguest
-                @auth
-                  <a href="#" style="font-weight: bold; pointer-events: none; color: #d66428;">Hi, {{ explode(' ', Auth::user()->name)[0] }}</a>
-                  @if(Auth::user()->role === 'admin')
-                  <a href="{{ route('admin.index') }}" style="color: #0d6efd; font-weight: 500;">Dashboard Admin</a>
-                  @endif
-                  <form action="{{ route('logout') }}" method="POST" style="margin: 0; padding: 0;">
-                    @csrf
-                    <button type="submit" style="background: none; border: none; width: 100%; text-align: left; padding: 10px 16px; cursor: pointer; color: #333; font-size: 14px;">Logout</button>
-                  </form>
-                @endauth
+              <div class="dropdown-content">
+                <a href="/login">Sign in</a>
+                <a href="/register">Create Account</a>
               </div>
+            </div>
           </div>
         </div>
       </div>
       
     </div>
-  </header><main style="padding: 60px 0;">
-    <div class="container">
-      @if(session('success'))
-          <div class="alert alert-success">{{ session('success') }}</div>
-      @endif
-      @if(session('error'))
-          <div class="alert alert-danger">{{ session('error') }}</div>
-      @endif
+  </header>
+  @endguest
 
-      <div class="row align-items-start gx-5">
-        
-        <!-- Gambar Produk -->
-        <div class="col-lg-6 mb-4 mb-lg-0">
-          <img src="/{{ $product->image }}" alt="{{ $product->name }}" class="img-fluid rounded" style="width: 100%; object-fit: cover; max-height: 500px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-        </div>
+  {{-- ========== HEADER: CUSTOMER (setelah login) ========== --}}
+  @auth
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
   
-        <!-- Detail Produk -->
-        <div class="col-lg-6">
-          <h1 class="fw-bold text-uppercase" style="font-size: 2.5rem; letter-spacing: 1px;">{{ $product->name }}</h1>
-          <h5 class="mb-4" style="font-weight: 500; font-size: 1.1rem;">Kategori: {{ $product->category }}</h5>
-  
-          <p class="fw-bold mb-2">Product details :</p>
-          <p class="text-muted" style="font-size: 0.95rem; line-height: 1.6;">
-            {{ $product->description ?? 'Deskripsi produk belum tersedia. Produk ini dirancang dengan kualitas terbaik untuk kenyamanan dan keindahan ruangan Anda. Pastikan untuk selalu merawat produk sesuai instruksi agar tahan lebih lama.' }}
-          </p>
-  
-          <!-- Pilihan Warna -->
-          <div class="mb-4 mt-4">
-            <p class="fw-bold mb-2">Color</p>
-            <select class="form-select w-auto bg-transparent shadow-sm" style="min-width: 150px; border-radius: 8px;">
-              <option selected>Default</option>
-              <option>Grey</option>
-              <option>Beige</option>
-            </select>
-          </div>
+      <a href="/" class="logo d-flex align-items-center">
+        <h1 class="sitename">PerabotiQ</h1>
+      </a>
 
-          <form action="{{ route('cart.add') }}" method="POST">
-            @csrf
-            <input type="hidden" name="product_id" value="{{ $product->id }}">
-            
-            <!-- Atur Jumlah -->
-            <div class="mb-4 d-flex align-items-center">
-              <p class="fw-bold mb-0 me-4" style="width: 100px;">Quantity</p>
-              <div class="d-flex align-items-center">
-                  <button type="button" class="qty-btn" onclick="kurangiJumlah()">-</button>
-                  <div class="qty-val" id="jumlah-display">1</div>
-                  <input type="hidden" name="quantity" id="jumlah-input" value="1">
-                  <button type="button" class="qty-btn" onclick="tambahJumlah()">+</button>
+      <!-- NAV TOGGLE -->
+      <input type="checkbox" id="nav-toggle" class="nav-toggle d-xl-none">
+      <label for="nav-toggle" class="mobile-nav-toggle d-xl-none">
+        <i class="bi bi-list"></i>
+      </label>
+
+      <!-- NAV MENU -->
+      <nav id="navmenu">
+        <ul class="navmenu">
+          <li><a href="/">Home</a></li>
+          <li><a href="/#about">About</a></li>
+          <li><a href="/#products">Products</a></li>
+        </ul>
+      </nav>
+
+      <!-- RIGHT BUTTONS (login version with circle icons + truck) -->
+      <div class="d-flex gap-3 align-items-center">
+        <div class="search-container d-flex align-items-center position-relative">
+          <input type="text" id="searchInput" class="search-input" placeholder="Cari produk..." />
+          <button id="searchToggle" class="icon-btn circle-icon" title="Search">
+            <i class="bi bi-search"></i>
+          </button>
+      
+          <!-- Delivery Icon -->
+          <button class="icon-btn circle-icon" onclick="window.location.href='{{ route('customer.pesanan') }}'" title="Pesanan Saya">
+            <i class="bi bi-truck"></i>
+          </button>
+      
+          <!-- CART BUTTON -->
+          <button class="btn btn-outline-light" onclick="window.location.href='/keranjang'" title="Cart">
+            <i class="bi bi-cart"></i>
+          </button>
+
+          <!-- PROFILE DROPDOWN BUTTON -->
+          <div class="profile-wrapper position-relative">
+            <button class="icon-btn circle-icon" title="Profile" onclick="toggleProfileDropdown()">
+              <i class="bi bi-person-circle"></i>
+            </button>
+      
+            <!-- Dropdown -->
+            <div class="profile-dropdown" id="profileDropdown">
+              <div class="arrow-up"></div>
+              <div class="dropdown-content">
+                <a href="#" style="font-weight: bold; pointer-events: none; color: #d66428;">Hi, {{ explode(' ', Auth::user()->name)[0] }}</a>
+                @if(Auth::user()->role === 'admin')
+                <a href="{{ route('admin.dashboard') }}" style="color: #0d6efd; font-weight: 500;">Dashboard Admin</a>
+                @endif
+                @if(Auth::user()->role === 'customer')
+                <a href="{{ route('customer.pesanan') }}" style="color: #333;"><i class="bi bi-box-seam me-1"></i> Pesanan Saya</a>
+                <a href="{{ route('keranjang') }}" style="color: #333;"><i class="bi bi-cart3 me-1"></i> Keranjang</a>
+                @endif
+                <form action="{{ route('logout') }}" method="POST" style="margin: 0; padding: 0;">
+                  @csrf
+                  <button type="submit" style="background: none; border: none; width: 100%; text-align: left; padding: 10px 16px; cursor: pointer; color: #333; font-size: 14px;">Logout</button>
+                </form>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </header>
+  @endauth
+
+
+  {{-- ========== MAIN CONTENT ========== --}}
+  <main class="main">
+
+    <div style="height: 100px;"></div>
+
+    <!-- Page Title -->
+    <div class="page-title dark-background">
+      <div class="container position-relative">
+      </div>
+    </div>
+
+    <!-- Product Details Section -->
+    <section id="product-detail" class="product-detail section">
+      <div class="container">
+        @if(session('success'))
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-1"></i> {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        @endif
+        @if(session('error'))
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-circle me-1"></i> {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        @endif
+
+        <div class="row align-items-start">
+    
+          <!-- Gambar Produk -->
+          <div class="col-lg-6" data-aos="fade-right">
+            <img src="/{{ $product->gambar }}" alt="{{ $product->nama }}" class="img-fluid rounded shadow-sm">
+          </div>
+    
+          <!-- Detail Produk -->
+          <div class="col-lg-6 mt-4 mt-lg-0" data-aos="fade-left">
+            <h2 class="fw-bold">{{ $product->nama }}</h2>
+            <h5 class="text-muted mb-3">Kategori: {{ ucwords(str_replace('-', ' ', $product->kategori)) }}</h5>
+    
+            <p><strong>Product details :</strong></p>
+            <p>
+              {{ $product->deskripsi ?? 'Produk ini dirancang dengan kualitas terbaik untuk kenyamanan dan keindahan ruangan Anda. Dibuat dari material premium yang tahan lama dan mudah dirawat.' }}
+            </p>
+    
+            <!-- Pilihan Warna -->
+            <div class="mb-3">
+              <label for="warna" class="form-label fw-semibold">Color</label>
+              <select id="warna" class="form-select w-auto">
+                <option selected>Default</option>
+                <option>Grey</option>
+                <option>Beige</option>
+              </select>
+            </div>
+    
+            <!-- Atur Jumlah -->
+            <div class="mb-3 d-flex align-items-center gap-3">
+              <label class="form-label fw-semibold mb-0">Quantity</label>
+              <button type="button" class="btn btn-outline-secondary btn-sm rounded-circle" onclick="kurangiJumlah()" style="width: 32px; height: 32px;">−</button>
+              <span id="jumlah-display" class="px-2 fw-bold">1</span>
+              <input type="hidden" id="jumlah-input" value="1">
+              <button type="button" class="btn btn-outline-secondary btn-sm rounded-circle" onclick="tambahJumlah()" style="width: 32px; height: 32px;">+</button>
             </div>
     
             <!-- Harga -->
-            <div class="mb-4 d-flex align-items-center">
-                <p class="fw-bold mb-0 me-4" style="width: 100px;">Total Price :</p>
-                <p class="fw-bold mb-0 fs-4">Rp<span id="subtotal">{{ number_format($product->price, 0, ',', '.') }}</span></p>
-            </div>
-    
-            <!-- Tombol Add to Cart -->
-            <div class="mt-4" style="max-width: 300px;">
-                @if($product->stock > 0)
-                  <p class="text-success mb-2" style="font-size: 0.85rem;"><i class="bi bi-check-circle"></i> Stok Tersedia ({{ $product->stock }})</p>
-                  <button type="submit" class="btn btn-add-cart w-100 fs-5">Add to cart</button>
+            <p class="fw-semibold fs-5 mt-3">Total Price : <span id="subtotal">Rp{{ number_format($product->harga, 0, ',', '.') }}</span></p>
+
+            <!-- Stok -->
+            @if($product->stok > 0)
+              <p class="text-success mb-2" style="font-size: 0.85rem;"><i class="bi bi-check-circle"></i> Stok Tersedia ({{ $product->stok }})</p>
+            @else
+              <p class="text-danger mb-2" style="font-size: 0.85rem;"><i class="bi bi-x-circle"></i> Stok Kosong</p>
+            @endif
+
+            {{-- Tombol: berbeda untuk guest vs customer --}}
+            @auth
+              <form action="{{ route('keranjang.tambah') }}" method="POST">
+                @csrf
+                <input type="hidden" name="produk_id" value="{{ $product->id }}">
+                <input type="hidden" name="quantity" id="qty-form" value="1">
+                @if($product->stok > 0)
+                  <button type="submit" class="btn btn-primary px-4 py-2 rounded-pill" style="background-color: #C18888; border: none; font-size: 1.1rem;">
+                    Add to cart
+                  </button>
                 @else
-                  <p class="text-danger mb-2" style="font-size: 0.85rem;"><i class="bi bi-x-circle"></i> Stok Kosong</p>
-                  <button type="button" class="btn btn-secondary w-100 rounded-pill py-2 fs-5" disabled>Habis</button>
+                  <button type="button" class="btn btn-secondary px-4 py-2 rounded-pill" disabled>Habis</button>
                 @endif
-            </div>
-          </form>
+              </form>
+            @endauth
+            @guest
+              @if($product->stok > 0)
+                <a href="/login" class="btn btn-primary px-4 py-2 rounded-pill" style="background-color: #C18888; border: none; font-size: 1.1rem; text-decoration: none;">
+                  <i class="bi bi-box-arrow-in-right me-1"></i> Login untuk Membeli
+                </a>
+              @else
+                <button type="button" class="btn btn-secondary px-4 py-2 rounded-pill" disabled>Habis</button>
+              @endif
+            @endguest
+
+          </div>
         </div>
       </div>
-    </div>
+    </section>
+
   </main>
 
+
   <!-- FOOTER -->
-      <footer class="footer">
+  <footer class="footer">
     <div class="footer-top">
       <div class="footer-section">
         <h4><i class="bi bi-box-seam"></i> Orders</h4>
@@ -261,40 +362,42 @@
     </div>
   </footer>
 
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Scripts -->
   <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/assets/js/main.js"></script>
   <script>
-    const hargaSatuan = {{ $product->price }};
-    const maxStock = {{ $product->stock }};
+    const hargaSatuan = {{ $product->harga }};
+    const maxStock = {{ $product->stok }};
     let jumlah = 1;
 
     function formatRupiah(angka) {
-        return angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      return angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
 
     function updateDisplay() {
-        document.getElementById('jumlah-display').innerText = jumlah;
-        document.getElementById('jumlah-input').value = jumlah;
-        const total = hargaSatuan * jumlah;
-        document.getElementById('subtotal').innerText = formatRupiah(total);
+      document.getElementById('jumlah-display').innerText = jumlah;
+      const inputEl = document.getElementById('jumlah-input');
+      if (inputEl) inputEl.value = jumlah;
+      const qtyForm = document.getElementById('qty-form');
+      if (qtyForm) qtyForm.value = jumlah;
+      const total = hargaSatuan * jumlah;
+      document.getElementById('subtotal').innerText = 'Rp' + formatRupiah(total);
     }
 
     function tambahJumlah() {
-        if (jumlah < maxStock) {
-            jumlah++;
-            updateDisplay();
-        } else {
-            alert('Jumlah melebihi stok yang tersedia!');
-        }
+      if (jumlah < maxStock) { jumlah++; updateDisplay(); }
+      else { alert('Jumlah melebihi stok yang tersedia!'); }
     }
 
     function kurangiJumlah() {
-        if (jumlah > 1) {
-            jumlah--;
-            updateDisplay();
-        }
+      if (jumlah > 1) { jumlah--; updateDisplay(); }
     }
   </script>
 </body>
 </html>
-
-
