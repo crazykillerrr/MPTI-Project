@@ -1,86 +1,83 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
-Route::get('/', function () {
-    return view('index');
-});
-Route::get('/login', function () {
-    return view('login');
-});
-Route::get('/register', function () {
-    return view('register');
-});
-Route::get('/afterlogin', function () {
-    return view('afterlogin');
-});
-Route::get('/aksesoris', function () {
-    $products = \App\Models\Product::where('category', 'Aksesoris')->get();
-    return view('aksesoris', compact('products'));
-});
-Route::get('/aksesorislog', function () {
-    return redirect('/aksesoris');
-});
-Route::get('/kamar-mandi', function () {
-    $products = \App\Models\Product::where('category', 'Kamar Mandi')->get();
-    return view('kamar-mandi', compact('products'));
-});
-Route::get('/kamarmandilog', function () {
-    return redirect('/kamar-mandi');
-});
-Route::get('/keranjang', [\App\Http\Controllers\CartController::class, 'index'])->name('cart.index');
-Route::post('/cart/add', [\App\Http\Controllers\CartController::class, 'add'])->name('cart.add');
-Route::post('/cart/remove/{cart}', [\App\Http\Controllers\CartController::class, 'destroy'])->name('cart.destroy');
-
-Route::get('/melacak', function () {
-    return view('melacak');
-});
-Route::get('/product/{id}', function ($id) {
-    $product = \App\Models\Product::findOrFail($id);
-    return view('product-details', compact('product'));
-})->name('product.details');
-Route::get('/ruang-kerja', function () {
-    $products = \App\Models\Product::where('category', 'Ruang Kerja')->get();
-    return view('ruang-kerja', compact('products'));
-});
-Route::get('/ruangkerjalog', function () {
-    return redirect('/ruang-kerja');
-});
-Route::get('/ruang-makan', function () {
-    $products = \App\Models\Product::where('category', 'Ruang Makan')->get();
-    return view('ruang-makan', compact('products'));
-});
-Route::get('/ruangmakanlog', function () {
-    return redirect('/ruang-makan');
-});
-Route::get('/ruang-tamu', function () {
-    $products = \App\Models\Product::where('category', 'Ruang Tamu')->get();
-    return view('ruang-tamu', compact('products'));
-});
-Route::get('/ruangtamulog', function () {
-    return redirect('/ruang-tamu');
-});
-Route::get('/ruang-tidur', function () {
-    $products = \App\Models\Product::where('category', 'Kamar Tidur')->get();
-    return view('ruang-tidur', compact('products'));
-});
-Route::get('/ruangtidurlog', function () {
-    return redirect('/ruang-tidur');
-});
-
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\KurirController;
+use App\Http\Controllers\ProdukController;
 
-Route::post('/login', [AuthController::class, 'loginSubmit'])->name('login.submit');
-Route::post('/register', [AuthController::class, 'registerSubmit'])->name('register.submit');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+// ===================== PUBLIC ROUTES =====================
 
-Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/', [AdminController::class, 'index'])->name('index');
-    Route::get('/create', [AdminController::class, 'create'])->name('create');
-    Route::post('/store', [AdminController::class, 'store'])->name('store');
-    Route::get('/edit/{product}', [AdminController::class, 'edit'])->name('edit');
-    Route::post('/update/{product}', [AdminController::class, 'update'])->name('update');
-    Route::post('/destroy/{product}', [AdminController::class, 'destroy'])->name('destroy');
+Route::get('/', fn() => view('index'))->name('home');
+
+Route::get('/login',     [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login',    [AuthController::class, 'login']);
+Route::get('/register',  [AuthController::class, 'showRegister'])->name('register');
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/logout',   [AuthController::class, 'logout'])->name('logout');
+
+Route::get('/produk/{kategori}', [ProdukController::class, 'index'])
+     ->where('kategori', 'aksesoris|kamar-mandi|ruang-kerja|ruang-makan|ruang-tamu|ruang-tidur')
+     ->name('produk.kategori');
+
+Route::get('/produk/detail/{id}', [ProdukController::class, 'show'])->name('produk.detail');
+
+// ===================== CUSTOMER ROUTES =====================
+
+Route::middleware(['auth', 'customer'])->group(function () {
+    Route::get('/dashboard', [CustomerController::class, 'dashboard'])->name('customer.dashboard');
+
+    Route::get('/produk/{kategori}/login', [CustomerController::class, 'kategoriLogin'])
+         ->where('kategori', 'aksesoris|kamar-mandi|ruang-kerja|ruang-makan|ruang-tamu|ruang-tidur')
+         ->name('produk.kategori.login');
+
+    Route::get('/keranjang',         [CustomerController::class, 'keranjang'])->name('keranjang');
+    Route::post('/keranjang/tambah', [CustomerController::class, 'tambahKeranjang'])->name('keranjang.tambah');
+    Route::post('/keranjang/hapus',  [CustomerController::class, 'hapusKeranjang'])->name('keranjang.hapus');
+
+    Route::get('/checkout',             [CustomerController::class, 'checkout'])->name('checkout');
+    Route::post('/checkout/konfirmasi', [CustomerController::class, 'konfirmasiCheckout'])->name('checkout.konfirmasi');
+
+    Route::get('/pesanan',      [CustomerController::class, 'pesanan'])->name('customer.pesanan');
+    Route::get('/pesanan/{id}', [CustomerController::class, 'pesananDetail'])->name('customer.pesanan.detail');
 });
 
+// ===================== ADMIN ROUTES =====================
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+
+    Route::get('/produk',               [AdminController::class, 'produkIndex'])->name('produk');
+    Route::get('/produk/tambah',        [AdminController::class, 'produkTambah'])->name('produk.tambah');
+    Route::post('/produk/simpan',       [AdminController::class, 'produkSimpan'])->name('produk.simpan');
+    Route::get('/produk/edit/{id}',     [AdminController::class, 'produkEdit'])->name('produk.edit');
+    Route::put('/produk/update/{id}',   [AdminController::class, 'produkUpdate'])->name('produk.update');
+    Route::delete('/produk/hapus/{id}', [AdminController::class, 'produkHapus'])->name('produk.hapus');
+
+    Route::get('/pesanan',              [AdminController::class, 'pesananIndex'])->name('pesanan');
+    Route::get('/pesanan/{id}',         [AdminController::class, 'pesananDetail'])->name('pesanan.detail');
+    Route::put('/pesanan/{id}/status',  [AdminController::class, 'pesananUpdateStatus'])->name('pesanan.status');
+
+    Route::get('/transaksi',                 [AdminController::class, 'transaksiIndex'])->name('transaksi');
+    Route::put('/transaksi/{id}/verifikasi', [AdminController::class, 'transaksiVerifikasi'])->name('transaksi.verifikasi');
+
+    Route::get('/laporan', [AdminController::class, 'laporan'])->name('laporan');
+});
+
+// ===================== KURIR ROUTES =====================
+
+Route::middleware(['auth', 'kurir'])->prefix('kurir')->name('kurir.')->group(function () {
+    Route::get('/dashboard', [KurirController::class, 'dashboard'])->name('dashboard');
+
+    Route::get('/pickup',                  [KurirController::class, 'pickupIndex'])->name('pickup');
+    Route::get('/pickup/{id}',             [KurirController::class, 'pickupDetail'])->name('pickup.detail');
+    Route::post('/pickup/{id}/konfirmasi', [KurirController::class, 'pickupKonfirmasi'])->name('pickup.konfirmasi');
+
+    Route::get('/pengiriman',              [KurirController::class, 'pengirimanIndex'])->name('pengiriman');
+    Route::get('/pengiriman/{id}',         [KurirController::class, 'pengirimanDetail'])->name('pengiriman.detail');
+    Route::put('/pengiriman/{id}/status',  [KurirController::class, 'updateStatus'])->name('pengiriman.status');
+
+    Route::get('/kendala',        [KurirController::class, 'kendalaIndex'])->name('kendala');
+    Route::post('/kendala/simpan', [KurirController::class, 'kendalaSimpan'])->name('kendala.simpan');
+});

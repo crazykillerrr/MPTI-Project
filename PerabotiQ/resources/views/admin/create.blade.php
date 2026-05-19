@@ -45,7 +45,7 @@
             <input type="file" name="image" class="form-control" accept="image/*">
           </div>
           <button type="submit" class="btn btn-primary">Simpan</button>
-          <a href="{{ route('admin.index') }}" class="btn btn-secondary">Batal</a>
+          <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">Batal</a>
         </form>
       </div>
     </div>
