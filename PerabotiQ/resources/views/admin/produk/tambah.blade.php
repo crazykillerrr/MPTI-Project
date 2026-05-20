@@ -1,32 +1,61 @@
 @extends('layouts.admin')
 @section('title','Tambah Produk')
 @section('content')
-<h1>Tambah Produk</h1>
-<form action="{{ route('admin.produk.simpan') }}" method="POST" enctype="multipart/form-data" style="background:#fff;padding:30px;border-radius:10px;border:1px solid #e8e5e0;max-width:600px;">
-    @csrf
-    @foreach([['nama','Nama Produk','text'],['harga','Harga','number'],['stok','Stok','number']] as [$name,$label,$type])
-    <div style="margin-bottom:18px;">
-        <label style="display:block;font-size:0.82rem;font-weight:600;margin-bottom:6px;">{{ $label }}</label>
-        <input type="{{ $type }}" name="{{ $name }}" value="{{ old($name) }}" style="width:100%;padding:10px 14px;border:1px solid #ddd;border-radius:6px;font-size:0.9rem;">
+<div class="page-header">
+    <div>
+        <h1><i class="bi bi-plus-circle-fill" style="color:var(--accent);margin-right:8px;"></i>Tambah Produk</h1>
+        <p>Tambahkan produk baru ke katalog toko</p>
     </div>
-    @endforeach
-    <div style="margin-bottom:18px;">
-        <label style="display:block;font-size:0.82rem;font-weight:600;margin-bottom:6px;">Kategori</label>
-        <select name="kategori" style="width:100%;padding:10px 14px;border:1px solid #ddd;border-radius:6px;font-size:0.9rem;">
-            @foreach(['aksesoris','kamar-mandi','ruang-kerja','ruang-makan','ruang-tamu','ruang-tidur'] as $k)
-                <option value="{{ $k }}" {{ old('kategori')==$k?'selected':'' }}>{{ ucfirst(str_replace('-',' ',$k)) }}</option>
-            @endforeach
-        </select>
-    </div>
-    <div style="margin-bottom:18px;">
-        <label style="display:block;font-size:0.82rem;font-weight:600;margin-bottom:6px;">Deskripsi</label>
-        <textarea name="deskripsi" rows="4" style="width:100%;padding:10px 14px;border:1px solid #ddd;border-radius:6px;font-size:0.9rem;">{{ old('deskripsi') }}</textarea>
-    </div>
-    <div style="margin-bottom:24px;">
-        <label style="display:block;font-size:0.82rem;font-weight:600;margin-bottom:6px;">Gambar</label>
-        <input type="file" name="gambar" accept="image/*">
-    </div>
-    <button type="submit" class="btn">Simpan Produk</button>
-    <a href="{{ route('admin.produk') }}" class="btn" style="margin-left:10px;">Batal</a>
-</form>
+    <a href="{{ route('admin.produk') }}" class="btn">
+        <i class="bi bi-arrow-left"></i> Kembali
+    </a>
+</div>
+
+<div class="form-card">
+    <form action="{{ route('admin.produk.simpan') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        <div class="form-group">
+            <label><i class="bi bi-tag-fill" style="color:var(--accent);margin-right:4px;"></i> Nama Produk</label>
+            <input type="text" name="nama" value="{{ old('nama') }}" class="form-control" placeholder="Masukkan nama produk" required>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+            <div class="form-group">
+                <label><i class="bi bi-cash-stack" style="color:var(--accent);margin-right:4px;"></i> Harga (Rp)</label>
+                <input type="number" name="harga" value="{{ old('harga') }}" class="form-control" placeholder="0" required>
+            </div>
+            <div class="form-group">
+                <label><i class="bi bi-boxes" style="color:var(--accent);margin-right:4px;"></i> Stok</label>
+                <input type="number" name="stok" value="{{ old('stok') }}" class="form-control" placeholder="0" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label><i class="bi bi-grid-fill" style="color:var(--accent);margin-right:4px;"></i> Kategori</label>
+            <select name="kategori" class="form-control" required>
+                @foreach(['aksesoris','kamar-mandi','ruang-kerja','ruang-makan','ruang-tamu','ruang-tidur'] as $k)
+                    <option value="{{ $k }}" {{ old('kategori')==$k?'selected':'' }}>{{ ucfirst(str_replace('-',' ',$k)) }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label><i class="bi bi-text-paragraph" style="color:var(--accent);margin-right:4px;"></i> Deskripsi</label>
+            <textarea name="deskripsi" class="form-control" rows="4" placeholder="Deskripsikan produk Anda...">{{ old('deskripsi') }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label><i class="bi bi-image-fill" style="color:var(--accent);margin-right:4px;"></i> Gambar Produk</label>
+            <input type="file" name="gambar" accept="image/*" class="form-control form-file">
+            <div class="form-hint">Format: JPG, PNG, WebP. Maksimal 2MB.</div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-check-lg"></i> Simpan Produk
+            </button>
+            <a href="{{ route('admin.produk') }}" class="btn">Batal</a>
+        </div>
+    </form>
+</div>
 @endsection
