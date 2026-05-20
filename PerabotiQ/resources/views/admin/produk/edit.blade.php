@@ -1,32 +1,67 @@
 @extends('layouts.admin')
 @section('title','Edit Produk')
 @section('content')
-<h1>Edit Produk</h1>
-<form action="{{ route('admin.produk.update', $produk->id) }}" method="POST" enctype="multipart/form-data" style="background:#fff;padding:30px;border-radius:10px;border:1px solid #e8e5e0;max-width:600px;">
-    @csrf @method('PUT')
-    @foreach([['nama','Nama Produk','text'],['harga','Harga','number'],['stok','Stok','number']] as [$name,$label,$type])
-    <div style="margin-bottom:18px;">
-        <label style="display:block;font-size:0.82rem;font-weight:600;margin-bottom:6px;">{{ $label }}</label>
-        <input type="{{ $type }}" name="{{ $name }}" value="{{ old($name, $produk->$name) }}" style="width:100%;padding:10px 14px;border:1px solid #ddd;border-radius:6px;font-size:0.9rem;">
+<div class="page-header">
+    <div>
+        <h1><i class="bi bi-pencil-square" style="color:var(--accent);margin-right:8px;"></i>Edit Produk</h1>
+        <p>Perbarui informasi produk <strong>{{ $produk->nama }}</strong></p>
     </div>
-    @endforeach
-    <div style="margin-bottom:18px;">
-        <label style="display:block;font-size:0.82rem;font-weight:600;margin-bottom:6px;">Kategori</label>
-        <select name="kategori" style="width:100%;padding:10px 14px;border:1px solid #ddd;border-radius:6px;font-size:0.9rem;">
-            @foreach(['aksesoris','kamar-mandi','ruang-kerja','ruang-makan','ruang-tamu','ruang-tidur'] as $k)
-                <option value="{{ $k }}" {{ $produk->kategori==$k?'selected':'' }}>{{ ucfirst(str_replace('-',' ',$k)) }}</option>
-            @endforeach
-        </select>
-    </div>
-    <div style="margin-bottom:18px;">
-        <label style="display:block;font-size:0.82rem;font-weight:600;margin-bottom:6px;">Deskripsi</label>
-        <textarea name="deskripsi" rows="4" style="width:100%;padding:10px 14px;border:1px solid #ddd;border-radius:6px;font-size:0.9rem;">{{ old('deskripsi', $produk->deskripsi) }}</textarea>
-    </div>
-    <div style="margin-bottom:24px;">
-        <label style="display:block;font-size:0.82rem;font-weight:600;margin-bottom:6px;">Gambar Baru (opsional)</label>
-        <input type="file" name="gambar" accept="image/*">
-    </div>
-    <button type="submit" class="btn">Update Produk</button>
-    <a href="{{ route('admin.produk') }}" class="btn" style="margin-left:10px;">Batal</a>
-</form>
+    <a href="{{ route('admin.produk') }}" class="btn">
+        <i class="bi bi-arrow-left"></i> Kembali
+    </a>
+</div>
+
+<div class="form-card">
+    <form action="{{ route('admin.produk.update', $produk->id) }}" method="POST" enctype="multipart/form-data">
+        @csrf @method('PUT')
+        <div class="form-group">
+            <label><i class="bi bi-tag-fill" style="color:var(--accent);margin-right:4px;"></i> Nama Produk</label>
+            <input type="text" name="nama" value="{{ old('nama', $produk->nama) }}" class="form-control" required>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+            <div class="form-group">
+                <label><i class="bi bi-cash-stack" style="color:var(--accent);margin-right:4px;"></i> Harga (Rp)</label>
+                <input type="number" name="harga" value="{{ old('harga', $produk->harga) }}" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label><i class="bi bi-boxes" style="color:var(--accent);margin-right:4px;"></i> Stok</label>
+                <input type="number" name="stok" value="{{ old('stok', $produk->stok) }}" class="form-control" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label><i class="bi bi-grid-fill" style="color:var(--accent);margin-right:4px;"></i> Kategori</label>
+            <select name="kategori" class="form-control" required>
+                @foreach(['aksesoris','kamar-mandi','ruang-kerja','ruang-makan','ruang-tamu','ruang-tidur'] as $k)
+                    <option value="{{ $k }}" {{ $produk->kategori==$k?'selected':'' }}>{{ ucfirst(str_replace('-',' ',$k)) }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label><i class="bi bi-text-paragraph" style="color:var(--accent);margin-right:4px;"></i> Deskripsi</label>
+            <textarea name="deskripsi" class="form-control" rows="4">{{ old('deskripsi', $produk->deskripsi) }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label><i class="bi bi-image-fill" style="color:var(--accent);margin-right:4px;"></i> Gambar Produk Baru (opsional)</label>
+            @if($produk->gambar)
+                <div style="margin-bottom:12px;padding:12px;background:var(--body-bg);border-radius:8px;display:inline-flex;align-items:center;gap:12px;">
+                    <img src="/storage/{{ $produk->gambar }}" alt="{{ $produk->nama }}" style="width:64px;height:64px;border-radius:8px;object-fit:cover;border:1px solid var(--card-border);">
+                    <span style="font-size:0.82rem;color:var(--text-muted);">Gambar saat ini</span>
+                </div>
+            @endif
+            <input type="file" name="gambar" accept="image/*" class="form-control form-file">
+            <div class="form-hint">Biarkan kosong jika tidak ingin mengubah gambar.</div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-check-lg"></i> Update Produk
+            </button>
+            <a href="{{ route('admin.produk') }}" class="btn">Batal</a>
+        </div>
+    </form>
+</div>
 @endsection
