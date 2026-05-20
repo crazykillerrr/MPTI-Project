@@ -28,6 +28,15 @@ class UserSeeder extends Seeder
             ]
         );
 
+        User::updateOrCreate(
+            ['email' => 'pelanggan@perabotiq.com'],
+            [
+                'name'     => 'Pelanggan PerabotiQ',
+                'password' => bcrypt('pelanggan123'),
+                'role'     => 'customer',
+            ]
+        );
+
         // Seed sample products into produks table
         $products = [
             ['nama' => 'KIVIK Sofa', 'kategori' => 'ruang-tamu', 'deskripsi' => 'Sofa 3 dudukan yang sangat nyaman.', 'harga' => 4500000, 'stok' => 15, 'gambar' => 'assets/img/KIVIK.png'],
