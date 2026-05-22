@@ -37,6 +37,7 @@
             @auth
                 <span style="font-size:0.85rem;color:#666;">{{ Auth::user()->name }}</span>
                 @if(Auth::user()->role === 'customer')
+                    <a href="{{ route('customer.profil') }}" class="nav-btn">Profil Saya</a>
                     <a href="{{ route('customer.pesanan') }}" class="nav-btn">Pesanan Saya</a>
                     <a href="{{ route('keranjang') }}" class="nav-btn">Keranjang</a>
                 @endif

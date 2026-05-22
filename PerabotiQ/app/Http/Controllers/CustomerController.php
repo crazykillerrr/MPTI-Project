@@ -97,6 +97,13 @@ class CustomerController extends Controller
         return redirect()->route('customer.pesanan')->with('success', 'Pesanan berhasil dibuat! Silakan lakukan pembayaran.');
     }
 
+    // Profil Customer
+    public function profil()
+    {
+        $user = Auth::user();
+        return view('customer.profil', compact('user'));
+    }
+
     // Lacak Pesanan
     public function pesanan()
     {

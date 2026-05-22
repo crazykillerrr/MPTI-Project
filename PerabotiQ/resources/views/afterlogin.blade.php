@@ -86,6 +86,7 @@
                   <a href="{{ route('admin.dashboard') }}" style="color: #0d6efd; font-weight: 500;">Dashboard Admin</a>
                   @endif
                   @if(Auth::user()->role === 'customer')
+                  <a href="{{ route('customer.profil') }}" style="color: #333;"><i class="bi bi-person-badge me-1"></i> Profil Saya</a>
                   <a href="{{ route('customer.pesanan') }}" style="color: #333;"><i class="bi bi-box-seam me-1"></i> Pesanan Saya</a>
                   <a href="{{ route('keranjang') }}" style="color: #333;"><i class="bi bi-cart3 me-1"></i> Keranjang</a>
                   @endif

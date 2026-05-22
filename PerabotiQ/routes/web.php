@@ -41,6 +41,8 @@ Route::middleware(['auth', 'customer'])->group(function () {
 
     Route::get('/pesanan',      [CustomerController::class, 'pesanan'])->name('customer.pesanan');
     Route::get('/pesanan/{id}', [CustomerController::class, 'pesananDetail'])->name('customer.pesanan.detail');
+
+    Route::get('/profil', [CustomerController::class, 'profil'])->name('customer.profil');
 });
 
 // ===================== ADMIN ROUTES =====================
