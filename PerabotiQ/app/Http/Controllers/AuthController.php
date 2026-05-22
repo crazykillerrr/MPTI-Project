@@ -48,16 +48,24 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users',
-            'password' => 'required|min:6|confirmed',
+            'first_name'  => 'required|string|max:255',
+            'email'       => 'required|email|unique:users',
+            'password'    => 'required|min:6',
         ]);
 
+        $fullName = trim($request->first_name . ' ' . $request->last_name);
+        $phone    = trim($request->country_code . '' . $request->cell_number);
+        // strip emoji/flag from country_code, keep only the +xx part
+        $phone    = preg_replace('/[^\d+]/', '', $phone);
+
         User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'password' => bcrypt($request->password),
-            'role'     => 'customer',
+            'name'      => $fullName,
+            'email'     => $request->email,
+            'password'  => bcrypt($request->password),
+            'role'      => 'customer',
+            'address'   => $request->address,
+            'post_code' => $request->post_code,
+            'phone'     => $phone ?: null,
         ]);
 
         return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan login.');
