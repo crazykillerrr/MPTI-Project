@@ -9,7 +9,10 @@ use App\Http\Controllers\ProdukController;
 
 // ===================== PUBLIC ROUTES =====================
 
-Route::get('/', fn() => view('index'))->name('home');
+Route::get('/', function () {
+    $produkRekomendasi = \App\Models\Produk::inRandomOrder()->take(10)->get();
+    return view('index', compact('produkRekomendasi'));
+})->name('home');
 
 Route::get('/login',     [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login',    [AuthController::class, 'login']);

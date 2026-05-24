@@ -39,7 +39,7 @@
             <!-- NAV MENU -->
             <nav id="navmenu">
                 <ul class="navmenu">
-                    <li><a href="#hero" class="active">Home</a></li>
+                    <li><a href="#hero">Home</a></li>
                     <li><a href="#about">About</a></li>
                     <li><a href="#products">Products</a></li>
                 </ul>
