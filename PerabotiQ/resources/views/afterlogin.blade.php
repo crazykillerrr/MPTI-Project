@@ -18,6 +18,7 @@
 
   <!-- Main CSS File -->
   <link href="/assets/css/main.css" rel="stylesheet">
+  <link href="/assets/css/rekomendasi.css" rel="stylesheet">
 
 </head>
 
@@ -26,7 +27,7 @@
     <header id="header" class="header d-flex align-items-center fixed-top">
         <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
       
-            <a href="/" class="logo d-flex align-items-center">
+            <a href="{{ route('customer.dashboard') }}" class="logo d-flex align-items-center">
                 <h1 class="sitename">PerabotiQ</h1>
             </a>
   
@@ -259,8 +260,16 @@
           </div>
         </div>
       </section>
-  
-  
+
+      {{-- ══════════ Product Recommendations ══════════ --}}
+      @include('partials._rekomendasi', [
+        'produkRekomendasi' => $produkRekomendasi ?? collect(),
+        'checkoutUrl'       => route('produk.kategori.login', 'ruang-tamu'),
+        'isGuest'           => false,
+      ])
+
+
+
       <footer class="footer">
         <div class="footer-top">
           <div class="footer-section">

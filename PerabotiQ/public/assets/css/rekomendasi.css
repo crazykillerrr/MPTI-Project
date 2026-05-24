@@ -1,0 +1,318 @@
+/* ═══════════════════════════════════════════════════════
+   rekomendasi.css  —  Product Recommendations Section
+   Layout: compact hero (hotspot dots) + side cards + grid bawah
+   Font: Poppins
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Section reset ── */
+#recommendations {
+  overflow: visible !important;
+}
+#recommendations h2 {
+  font-size: 1.55rem !important;
+  font-weight: 700 !important;
+  text-transform: none !important;
+  letter-spacing: -0.2px !important;
+  color: #1a1a1a !important;
+  line-height: 1.2 !important;
+  margin: 0 !important;
+}
+#recommendations h2::after { display: none !important; }
+
+/* ══════════════════════════════════════════════
+   FEATURED ROW (hero + side)
+   ══════════════════════════════════════════════ */
+.rek-layout {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+  height: 380px;          /* total tinggi baris featured */
+}
+
+/* ── Hero card (kiri ~56%) ── */
+.rek-hero {
+  position: relative;
+  flex: 0 0 56%;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #ddd;
+  box-shadow: 0 2px 14px rgba(0,0,0,0.09);
+}
+.rek-hero-link {
+  display: block;
+  height: 100%;
+}
+.rek-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.45s ease;
+}
+.rek-hero:hover .rek-hero-img {
+  transform: scale(1.04);
+}
+/* gradient bottom bar */
+.rek-hero-bar {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.42) 0%, transparent 100%);
+  padding: 22px 18px 14px;
+  opacity: 0;
+  transition: opacity 0.28s;
+}
+.rek-hero:hover .rek-hero-bar { opacity: 1; }
+.rek-hero-bar .hero-name {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.88rem; font-weight: 700; color: #fff; margin: 0 0 1px;
+}
+.rek-hero-bar .hero-price {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.78rem; color: rgba(255,255,255,0.85); margin: 0;
+}
+
+/* ══════════════════════════════════════════════
+   HOTSPOT DOTS
+   ══════════════════════════════════════════════ */
+.rek-dot {
+  position: absolute;
+  z-index: 10;
+  cursor: pointer;
+}
+.rek-dot-ring {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.28);
+  display: flex; align-items: center; justify-content: center;
+  animation: dot-pulse 2.4s ease-in-out infinite;
+  transition: background 0.2s;
+}
+.rek-dot:hover .rek-dot-ring {
+  background: rgba(255,255,255,0.55);
+  animation: none;
+}
+.rek-dot-inner {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.28);
+  transition: transform 0.2s;
+}
+.rek-dot:hover .rek-dot-inner { transform: scale(1.18); }
+
+@keyframes dot-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,255,255,0.5); }
+  50%       { box-shadow: 0 0 0 7px rgba(255,255,255,0); }
+}
+
+/* ── Price tag popup ── */
+.rek-price-tag {
+  position: absolute;
+  bottom: calc(100% + 9px);
+  left: 50%;
+  transform: translateX(-50%) translateY(5px);
+  min-width: 160px;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 10px;
+  padding: 10px 14px 9px;
+  box-shadow: 0 6px 22px rgba(0,0,0,0.16);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
+}
+.rek-price-tag::after {
+  content: '';
+  position: absolute;
+  top: 100%; left: 50%; transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: rgba(255,255,255,0.95);
+}
+.rek-dot:hover .rek-price-tag {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* flip variant for right-edge dots */
+.rek-dot.dot-flip .rek-price-tag {
+  left: auto; right: 0;
+  transform: translateX(0) translateY(5px);
+}
+.rek-dot.dot-flip .rek-price-tag::after {
+  left: auto; right: 10px; transform: none;
+}
+.rek-dot.dot-flip:hover .rek-price-tag {
+  transform: translateX(0) translateY(0);
+}
+
+.rek-tag-name {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.78rem; font-weight: 700; color: #1a1a1a;
+  margin: 0 0 1px; overflow: hidden; text-overflow: ellipsis; max-width: 180px;
+}
+.rek-tag-cat {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.66rem; color: #aaa; margin: 0 0 5px;
+}
+.rek-tag-price {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.85rem; font-weight: 700; color: #1a1a1a; margin: 0;
+}
+
+/* ══════════════════════════════════════════════
+   SIDE CARDS (kanan, 2 stacked)
+   ══════════════════════════════════════════════ */
+.rek-side-stack {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.rek-side-card {
+  flex: 1;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #ece9e4;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.22s, transform 0.22s;
+  text-decoration: none;
+}
+.rek-side-card:hover {
+  box-shadow: 0 8px 26px rgba(0,0,0,0.12);
+  transform: translateY(-3px);
+  text-decoration: none;
+}
+.rek-side-img-wrap {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  min-height: 100px;
+  background: #f5f4f2;
+}
+.rek-side-img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  transition: transform 0.32s ease;
+}
+.rek-side-card:hover .rek-side-img { transform: scale(1.05); }
+.rek-side-info {
+  padding: 10px 14px 12px;
+  background: #fff; flex-shrink: 0;
+}
+.rek-side-price {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.1rem; font-weight: 800; color: #1a1a1a;
+  margin: 0 0 2px; line-height: 1.1;
+}
+.rek-side-name {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.74rem; color: #888; margin: 0;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+/* badge on hover */
+.rek-side-badge {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.92);
+  border-radius: 16px; padding: 3px 9px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.66rem; font-weight: 600; color: #555;
+  opacity: 0; transition: opacity 0.2s;
+  backdrop-filter: blur(4px);
+  white-space: nowrap;
+}
+.rek-side-card:hover .rek-side-badge { opacity: 1; }
+
+/* ══════════════════════════════════════════════
+   GRID ROW (bawah — small cards)
+   ══════════════════════════════════════════════ */
+.rek-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+  margin-top: 14px;
+}
+.rek-grid-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #ece9e4;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+  transition: box-shadow 0.22s, transform 0.22s;
+  text-decoration: none;
+  display: flex; flex-direction: column;
+}
+.rek-grid-card:hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,0.11);
+  transform: translateY(-3px);
+  text-decoration: none;
+}
+.rek-grid-img-wrap {
+  position: relative; overflow: hidden;
+  aspect-ratio: 4/3; background: #f5f4f2;
+}
+.rek-grid-img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform 0.32s ease;
+}
+.rek-grid-card:hover .rek-grid-img { transform: scale(1.06); }
+.rek-grid-info { padding: 9px 11px 11px; }
+.rek-grid-name {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.74rem; font-weight: 600; color: #1a1a1a;
+  margin: 0 0 3px; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.rek-grid-price {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.78rem; font-weight: 700; color: #d66428;
+  margin: 0 0 4px;
+}
+.rek-grid-cat {
+  display: inline-block;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.62rem; font-weight: 500; color: #999;
+  background: #f3f2f0; border-radius: 8px; padding: 1px 7px;
+}
+
+/* overlay on grid card hover */
+.rek-grid-overlay {
+  position: absolute; inset: 0;
+  background: rgba(26,26,26,0.45);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 0.22s;
+}
+.rek-grid-card:hover .rek-grid-overlay { opacity: 1; }
+.rek-grid-overlay span {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.7rem; font-weight: 600; color: #fff;
+  background: rgba(214,100,40,0.9);
+  border-radius: 14px; padding: 4px 12px; white-space: nowrap;
+}
+
+/* ── Empty state ── */
+.rek-empty {
+  text-align: center; padding: 50px 30px;
+  font-family: 'Poppins', sans-serif; color: #bbb; font-size: 0.88rem;
+}
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════ */
+@media (max-width: 991px) {
+  .rek-layout { flex-direction: column; height: auto; }
+  .rek-hero   { flex: none; height: 280px; }
+  .rek-side-stack { flex-direction: row; }
+  .rek-side-card  { flex: 1; }
+  .rek-side-price { font-size: 0.95rem; }
+  .rek-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 575px) {
+  .rek-side-stack { flex-direction: column; }
+  .rek-hero       { height: 230px; }
+  .rek-grid       { grid-template-columns: repeat(2, 1fr); }
+}

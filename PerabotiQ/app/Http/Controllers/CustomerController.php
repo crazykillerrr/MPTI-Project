@@ -13,7 +13,7 @@ class CustomerController extends Controller
 {
     public function dashboard()
     {
-        $produkRekomendasi = Produk::inRandomOrder()->take(6)->get();
+        $produkRekomendasi = Produk::inRandomOrder()->take(10)->get();
         return view('afterlogin', compact('produkRekomendasi'));
     }
 

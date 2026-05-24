@@ -21,6 +21,7 @@
 
   <!-- Main CSS File -->
   <link href="/assets/css/main.css" rel="stylesheet">
+  <link href="/assets/css/rekomendasi.css" rel="stylesheet">
 
 </head>
 
@@ -246,7 +247,16 @@
       </div>
     </section>
 
+    {{-- ══════════ Product Recommendations ══════════ --}}
+    @include('partials._rekomendasi', [
+      'produkRekomendasi' => $produkRekomendasi ?? collect(),
+      'checkoutUrl'       => '/login',
+      'isGuest'           => true,
+    ])
+
+
   </main>
+
 
 
       <!-- FOOTER -->
