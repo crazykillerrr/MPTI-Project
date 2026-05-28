@@ -28,7 +28,7 @@
                 <td>
                     <div style="display:flex;align-items:center;gap:12px;">
                         @if($p->gambar)
-                            <img src="/storage/{{ $p->gambar }}" alt="{{ $p->nama }}" style="width:44px;height:44px;border-radius:8px;object-fit:cover;border:1px solid var(--card-border);">
+                            <img src="/{{ $p->image }}" alt="{{ $p->nama }}" style="width:44px;height:44px;border-radius:8px;object-fit:cover;border:1px solid var(--card-border);">
                         @else
                             <div style="width:44px;height:44px;border-radius:8px;background:var(--body-bg);display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:1.1rem;">
                                 <i class="bi bi-image"></i>

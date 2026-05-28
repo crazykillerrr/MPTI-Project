@@ -15,7 +15,12 @@ class Produk extends Model
     public function getNameAttribute()        { return $this->nama; }
     public function getPriceAttribute()       { return $this->harga; }
     public function getStockAttribute()       { return $this->stok; }
-    public function getImageAttribute()       { return $this->gambar; }
+    public function getImageAttribute()       { 
+        if (str_starts_with($this->gambar, 'assets/')) {
+            return $this->gambar;
+        }
+        return 'storage/' . $this->gambar;
+    }
     public function getCategoryAttribute()    { return $this->kategori; }
     public function getDescriptionAttribute() { return $this->deskripsi; }
 }

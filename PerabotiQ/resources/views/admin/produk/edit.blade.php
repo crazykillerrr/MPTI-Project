@@ -48,7 +48,7 @@
             <label><i class="bi bi-image-fill" style="color:var(--accent);margin-right:4px;"></i> Gambar Produk Baru (opsional)</label>
             @if($produk->gambar)
                 <div style="margin-bottom:12px;padding:12px;background:var(--body-bg);border-radius:8px;display:inline-flex;align-items:center;gap:12px;">
-                    <img src="/storage/{{ $produk->gambar }}" alt="{{ $produk->nama }}" style="width:64px;height:64px;border-radius:8px;object-fit:cover;border:1px solid var(--card-border);">
+                    <img src="/{{ $produk->image }}" alt="{{ $produk->nama }}" style="width:64px;height:64px;border-radius:8px;object-fit:cover;border:1px solid var(--card-border);">
                     <span style="font-size:0.82rem;color:var(--text-muted);">Gambar saat ini</span>
                 </div>
             @endif
