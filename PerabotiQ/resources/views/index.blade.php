@@ -51,7 +51,7 @@
   
       <!-- RIGHT BUTTONS -->
       <div class="search-container">
-        <input type="text" id="searchInput" class="search-input" placeholder="Cari produk..." />
+        <input type="text" id="searchInput" class="search-input" placeholder="Search products..." />
 
         <div class="d-flex gap-2 align-items-center">
           <button id="searchToggle" class="btn btn-outline-light" title="Search">
@@ -83,8 +83,8 @@
                   <a href="{{ route('admin.dashboard') }}" style="color: #0d6efd; font-weight: 500;">Dashboard Admin</a>
                   @endif
                   @if(Auth::user()->role === 'customer')
-                  <a href="{{ route('customer.pesanan') }}" style="color: #333;"><i class="bi bi-box-seam me-1"></i> Pesanan Saya</a>
-                  <a href="{{ route('keranjang') }}" style="color: #333;"><i class="bi bi-cart3 me-1"></i> Keranjang</a>
+                  <a href="{{ route('customer.pesanan') }}" style="color: #333;"><i class="bi bi-box-seam me-1"></i> My Orders</a>
+                  <a href="{{ route('keranjang') }}" style="color: #333;"><i class="bi bi-cart3 me-1"></i> Cart</a>
                   @endif
                   <form action="{{ route('logout') }}" method="POST" style="margin: 0; padding: 0;">
                     @csrf
@@ -217,7 +217,7 @@
           <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
             <div class="product-item position-relative p-0 overflow-hidden">
               <a href="{{ route('produk.kategori', 'ruang-kerja') }}">
-                <img src="https://d3p0bla3numw14.cloudfront.net/news-content/img/2021/08/02173644/Ruang-Kerja-Minimalis-di-Sudut-Ruangan.jpg" alt="Product 4" class="product-img">
+                <img src="https://ruangin.com/wp-content/uploads/2022/01/desain-ruang-kantor-kecil-minimalis.jpg" alt="Product 4" class="product-img">
               </a>
             </div>
             <p class="mt-2 fw-semibold text-left">Workspace</p>
@@ -261,85 +261,102 @@
 
       <!-- FOOTER -->
   <footer class="footer">
-    <div class="container">
-        <div class="row footer-top mb-4">
-          <div class="col-md-3 footer-section">
-            <h4><i class="bi bi-box-seam me-2"></i> Orders</h4>
+        <div class="footer-top">
+          <div class="footer-section">
+            <h4><i class="bi bi-box-seam"></i> Orders</h4>
             <p>Find out when your purchase will arrive or schedule a delivery.</p>
-            <p><a href="#">Track Order</a> | <a href="#">Schedule Delivery</a></p>
+            <a href="#">Track Order</a> | <a href="#">Schedule Delivery</a>
           </div>
-          <div class="col-md-3 footer-section">
-            <h4><i class="bi bi-chat-dots me-2"></i> Contact Us & Store Locator</h4>
+          <div class="footer-section">
+            <h4><i class="bi bi-chat-dots"></i> Contact Us & Store Locator</h4>
             <p>Questions? Text us: <a href="tel:+13127791979">(312) 779-1979</a></p>
-            <p><a href="#">Chat With Us</a> | <a href="#">Leave Feedback</a> | <a href="#">Find a Store</a></p>
+            <a href="#">Chat With Us</a> | <a href="#">Leave Feedback</a> | <a href="#">Find a Store</a>
           </div>
-          <div class="col-md-3 footer-section">
-            <h4><i class="bi bi-credit-card me-2"></i> Credit Card</h4>
+          <div class="footer-section">
+            <h4><i class="bi bi-credit-card"></i> Credit Card</h4>
             <p>Earn Reward Dollars every time you shop*</p>
-            <p><a href="#">Apply Now</a> | <a href="#">Manage Your Account</a></p>
+            <a href="#">Apply Now</a> | <a href="#">Manage Your Account</a>
           </div>
-          <div class="col-md-3 footer-section">
-            <h4><i class="bi bi-phone me-2"></i> Our iOS App</h4>
+          <div class="footer-section">
+            <h4><i class="bi bi-phone"></i> Our iOS App</h4>
             <p>Scan to shop exclusive first looks, get alerts & manage registry easier.</p>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/8/8d/Qr-1.png" alt="QR Code" style="width:60px;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/8/8d/Qr-1.png" alt="QR Code" class="qr-code">
+            <br>
+            <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="App Store" class="app-store">
           </div>
         </div>
+
+
       
-        <hr style="border-color:#ccc;">
+        <hr>
       
-        <div class="row footer-links pt-3 pb-3">
-          <div class="col-md-3">
+        <div class="footer-links">
+          <div class="column">
             <h5>Help</h5>
             <ul>
               <li><a href="#">Customer Service</a></li>
               <li><a href="#">Account</a></li>
               <li><a href="#">Return Policy</a></li>
+              <li><a href="#">Shipping Info</a></li>
+              <li><a href="#">Product Recalls</a></li>
+              <li><a href="#">Email & Text Preferences</a></li>
+              <li><a href="#">Sign Up for Texts</a></li>
             </ul>
           </div>
-          <div class="col-md-3">
+          <div class="column">
             <h5>Resources</h5>
             <ul>
               <li><a href="#">Free Design Services</a></li>
+              <li><a href="#">Wedding Registry</a></li>
+              <li><a href="#">Baby Registry</a></li>
               <li><a href="#">Gift Cards</a></li>
               <li><a href="#">Catalogs</a></li>
+              <li><a href="#">Trade Program</a></li>
+              <li><a href="#">Contract Grade Furniture</a></li>
             </ul>
           </div>
-          <div class="col-md-3">
+          <div class="column">
             <h5>Our Company</h5>
             <ul>
               <li><a href="#">About Us</a></li>
-              <li><a href="#">Careers</a></li>
-              <li><a href="#">Accessibility</a></li>
             </ul>
           </div>
-          <div class="col-md-3">
+          <div class="column">
             <h5>Follow Us</h5>
-            <p class="mb-2"><a href="#">#CrateStyle</a></p>
-            <div class="d-flex gap-2 fs-5 mb-3">
+            <a href="#">#CrateStyleYourHome</a> 
+            <div class="social-icons">
               <i class="bi bi-instagram"></i>
               <i class="bi bi-tiktok"></i>
+              <i class="bi bi-pinterest"></i>
               <i class="bi bi-youtube"></i>
+              <i class="bi bi-facebook"></i>
             </div>
             <h5>Our Brands</h5>
-            <div class="d-flex flex-wrap gap-2" style="font-size:12px;">
+            <div class="brands">
               <span>Crate&Barrel</span>
+              <span>Crate&kids</span>
               <span>CB2</span>
               <span>HUDSON</span>
+              <span>GRACE</span>
             </div>
           </div>
         </div>
       
-        <hr style="border-color:#ccc;">
+        <hr>
       
-        <div class="d-flex justify-content-center gap-3 pt-2 pb-4" style="font-size:12px;">
+        <div class="footer-bottom">
+          <div class="legal-links">
             <a href="#">Terms of Use</a>
             <a href="#">Privacy</a>
             <a href="#">Site Index</a>
+            <a href="#">Ad Choices</a>
             <a href="#">Cookie Settings</a>
-            <span class="text-muted">&copy;2026 All rights reserved.</span>
+            <a href="#">CA Supply Chains Act</a>
+            <a href="#">Do Not Sell My Info</a>
+          </div>
+          <p>&copy;2025 All rights reserved.</p>
         </div>
-    </div>
-  </footer>
+      </footer>
     
 
   <!-- Scroll Top -->

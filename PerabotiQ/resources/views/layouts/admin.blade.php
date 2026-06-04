@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -802,29 +802,29 @@
         </div>
 
         <nav class="sidebar-nav">
-            <div class="nav-label">Menu Utama</div>
+            <div class="nav-label">Main Menu</div>
             <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                 <i class="bi bi-grid-1x2-fill"></i> Dashboard
             </a>
             <a href="{{ route('admin.produk') }}" class="{{ request()->routeIs('admin.produk*') ? 'active' : '' }}">
-                <i class="bi bi-box-seam-fill"></i> Produk
+                <i class="bi bi-box-seam-fill"></i> Products
             </a>
             <a href="{{ route('admin.pesanan') }}" class="{{ request()->routeIs('admin.pesanan*') ? 'active' : '' }}">
-                <i class="bi bi-receipt"></i> Pesanan
+                <i class="bi bi-receipt"></i> Orders
             </a>
             <a href="{{ route('admin.transaksi') }}" class="{{ request()->routeIs('admin.transaksi*') ? 'active' : '' }}">
-                <i class="bi bi-credit-card-fill"></i> Transaksi
+                <i class="bi bi-credit-card-fill"></i> Transactions
             </a>
 
-            <div class="nav-label" style="margin-top: 12px;">Analitik</div>
+            <div class="nav-label" style="margin-top: 12px;">Analytics</div>
             <a href="{{ route('admin.laporan') }}" class="{{ request()->routeIs('admin.laporan') ? 'active' : '' }}">
-                <i class="bi bi-bar-chart-line-fill"></i> Laporan
+                <i class="bi bi-bar-chart-line-fill"></i> Reports
             </a>
         </nav>
 
         <div class="sidebar-footer">
             <a href="/" target="_blank">
-                <i class="bi bi-globe2"></i> Lihat Website
+                <i class="bi bi-globe2"></i> View Website
             </a>
         </div>
     </aside>
@@ -838,7 +838,7 @@
                     <i class="bi bi-list"></i>
                 </button>
                 <div class="topbar-title">
-                    @yield('topbar-title', 'Selamat datang di PerabotiQ Admin')
+                    @yield('topbar-title', 'Welcome to PerabotiQ Admin')
                 </div>
             </div>
             <div class="topbar-right">

@@ -42,14 +42,10 @@
                 <h3 style="font-size:0.95rem;font-weight:700;margin:0 0 16px;color:#1a1a1a;">Detail Produk</h3>
                 @foreach($items as $item)
                 <div style="display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid #f0eeeb;">
-                    @if($item->produk->gambar)
-                    <img src="{{ asset('storage/'.$item->produk->gambar) }}" alt="{{ $item->produk->nama }}"
-                         style="width:64px;height:64px;object-fit:cover;border-radius:10px;border:1px solid #f0eeeb;flex-shrink:0;">
-                    @else
-                    <div style="width:64px;height:64px;background:#f5f3f0;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
-                        <svg width="22" height="22" fill="#ccc" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 12l-4-5-3 3.86L9 13l-3 4h12l-2-2z"/></svg>
-                    </div>
-                    @endif
+                    <img src="{{ asset($item->produk->image) }}"
+                         alt="{{ $item->produk->nama }}"
+                         style="width:64px;height:64px;object-fit:cover;border-radius:10px;border:1px solid #f0eeeb;flex-shrink:0;"
+                         onerror="this.onerror=null;this.src='https://placehold.co/64x64/f5f3f0/aaa?text=Foto'">
                     <div style="flex:1;">
                         <p style="font-weight:600;font-size:0.9rem;margin:0 0 4px;color:#1a1a1a;">{{ $item->produk->nama }}</p>
                         <p style="font-size:0.82rem;color:#888;margin:0;">Qty: {{ $item->qty }}</p>

@@ -1,10 +1,10 @@
 @extends('layouts.admin')
-@section('title','Kelola Pesanan')
+@section('title','Manage Orders')
 @section('content')
 <div class="page-header">
     <div>
-        <h1><i class="bi bi-receipt" style="color:var(--accent);margin-right:8px;"></i>Kelola Pesanan</h1>
-        <p>Pantau dan kelola semua pesanan masuk</p>
+        <h1><i class="bi bi-receipt" style="color:var(--accent);margin-right:8px;"></i>Manage Orders</h1>
+        <p>Monitor and manage all incoming orders</p>
     </div>
 </div>
 
@@ -16,8 +16,8 @@
                 <th>Customer</th>
                 <th>Total</th>
                 <th>Status</th>
-                <th>Tanggal</th>
-                <th style="text-align:right;">Aksi</th>
+                <th>Date</th>
+                <th style="text-align:right;">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -61,7 +61,7 @@
                 <td colspan="6">
                     <div class="empty-state">
                         <i class="bi bi-receipt" style="display:block;"></i>
-                        <p>Belum ada pesanan masuk.</p>
+                        <p>No orders found.</p>
                     </div>
                 </td>
             </tr>

@@ -3,31 +3,42 @@
 @section('content')
 
 @php
-    $statusSteps = ['menunggu_pembayaran','diproses','dikirim','selesai'];
+    /*
+     * Status aktual sistem:
+     * menunggu_pembayaran | diproses | siap_kirim
+     * dalam_pengiriman | terkirim | selesai
+     * gagal_kirim | dibatalkan
+     */
     $statusLabels = [
         'menunggu_pembayaran' => 'Menunggu Pembayaran',
         'diproses'            => 'Sedang Diproses',
-        'dikirim'             => 'Sedang Dikirim',
+        'siap_kirim'          => 'Siap Dikirim',
+        'dalam_pengiriman'    => 'Sedang Dikirim',
+        'terkirim'            => 'Terkirim',
         'selesai'             => 'Pesanan Selesai',
+        'gagal_kirim'         => 'Gagal Kirim',
         'dibatalkan'          => 'Dibatalkan',
     ];
-    $isCancelled    = $pesanan->status === 'dibatalkan';
-    $currentStep    = array_search($pesanan->status, $statusSteps);
-    if ($currentStep === false) $currentStep = -1;
+
+    $isCancelled  = $pesanan->status === 'dibatalkan';
+    $isGagal      = $pesanan->status === 'gagal_kirim';
+    $isDikirim    = in_array($pesanan->status, ['dalam_pengiriman']);
+    $isTerkirim   = $pesanan->status === 'terkirim';
+    $isSelesai    = $pesanan->status === 'selesai';
+    $isDiproses   = in_array($pesanan->status, ['diproses','siap_kirim']);
 
     // Build a nice order number
-    $tglFmt = $pesanan->created_at->format('Ymd');
+    $tglFmt  = $pesanan->created_at->format('Ymd');
     $orderNo = 'PBQ/' . $tglFmt . '/MPL/' . str_pad($pesanan->id, 10, '0', STR_PAD_LEFT);
 
-    $user     = $pesanan->user;
-    $subtotal = $pesanan->detailPesanan->sum(fn($d) => $d->harga * $d->qty);
-    $ongkir   = $pesanan->total - $subtotal;
+    $user      = $pesanan->user;
+    $subtotal  = $pesanan->detailPesanan->sum(fn($d) => $d->harga * $d->qty);
+    $ongkir    = $pesanan->total - $subtotal;
     if ($ongkir < 0) $ongkir = 0;
-
     $transaksi = $pesanan->transaksi;
 @endphp
 
-<div style="background:#f0f0f0;min-height:calc(100vh - 80px);padding:30px 20px 80px;">
+<div style="background:#EFEFEF;min-height:calc(100vh - 80px);padding:30px 20px 80px;">
 <div style="max-width:820px;margin:0 auto;">
 
     {{-- Back link --}}
@@ -54,6 +65,8 @@
         </div>
 
         {{-- ── STATUS BANNER ── --}}
+
+        {{-- DIBATALKAN --}}
         @if($isCancelled)
         <div style="margin:16px 28px;padding:16px 20px;background:#fce4ec;border-radius:10px;display:flex;align-items:center;gap:14px;">
             <div style="width:40px;height:40px;background:#c62828;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
@@ -64,17 +77,21 @@
                 <p style="font-size:0.8rem;color:#888;margin:2px 0 0;">Pesanan ini telah dibatalkan</p>
             </div>
         </div>
-        @elseif($pesanan->status === 'dikirim')
-        <div style="margin:16px 28px;padding:16px 20px;background:#e3f2fd;border-radius:10px;display:flex;align-items:center;gap:14px;border:1px solid #90caf9;">
-            <div style="width:40px;height:40px;background:#1565c0;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                <svg width="20" height="20" fill="#fff" viewBox="0 0 24 24"><path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+
+        {{-- GAGAL KIRIM --}}
+        @elseif($isGagal)
+        <div style="margin:16px 28px;padding:16px 20px;background:#fce4ec;border-radius:10px;display:flex;align-items:center;gap:14px;border:1px solid #ef9a9a;">
+            <div style="width:40px;height:40px;background:#e53935;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="20" height="20" fill="#fff" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
             </div>
             <div>
-                <p style="font-weight:700;font-size:0.95rem;color:#1565c0;margin:0;">Order is being shipped</p>
-                <p style="font-size:0.8rem;color:#888;margin:2px 0 0;">Estimated arrival on {{ $pesanan->updated_at->addDays(3)->format('F d, Y') }}</p>
+                <p style="font-weight:700;font-size:0.95rem;color:#c62828;margin:0;">Pengiriman Gagal</p>
+                <p style="font-size:0.8rem;color:#888;margin:2px 0 0;">Paket tidak dapat terkirim — tim kami akan menghubungi Anda</p>
             </div>
         </div>
-        @elseif($pesanan->status === 'selesai')
+
+        {{-- SELESAI --}}
+        @elseif($isSelesai)
         <div style="margin:16px 28px;padding:16px 20px;background:#e8f5e9;border-radius:10px;display:flex;align-items:center;gap:14px;border:1px solid #a5d6a7;">
             <div style="width:40px;height:40px;background:#2e7d32;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                 <svg width="20" height="20" fill="#fff" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
@@ -84,14 +101,52 @@
                 <p style="font-size:0.8rem;color:#888;margin:2px 0 0;">Terima kasih telah berbelanja di PerabotiQ!</p>
             </div>
         </div>
+
+        {{-- TERKIRIM (kurir sudah antar, menunggu konfirmasi user) --}}
+        @elseif($isTerkirim)
+        <div style="margin:16px 28px;padding:16px 20px;background:#e8f5e9;border-radius:10px;display:flex;align-items:center;gap:14px;border:1px solid #a5d6a7;">
+            <div style="width:40px;height:40px;background:#388e3c;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="20" height="20" fill="#fff" viewBox="0 0 24 24"><path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+            </div>
+            <div>
+                <p style="font-weight:700;font-size:0.95rem;color:#2e7d32;margin:0;">Paket Telah Terkirim</p>
+                <p style="font-size:0.8rem;color:#888;margin:2px 0 0;">Konfirmasi penerimaan sebelum {{ $pesanan->updated_at->addDays(14)->format('d-m-Y') }}</p>
+            </div>
+        </div>
+
+        {{-- DALAM PENGIRIMAN --}}
+        @elseif($isDikirim)
+        <div style="margin:16px 28px;padding:16px 20px;background:#e3f2fd;border-radius:10px;display:flex;align-items:center;gap:14px;border:1px solid #90caf9;">
+            <div style="width:40px;height:40px;background:#1565c0;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="20" height="20" fill="#fff" viewBox="0 0 24 24"><path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+            </div>
+            <div>
+                <p style="font-weight:700;font-size:0.95rem;color:#1565c0;margin:0;">Order is being shipped</p>
+                <p style="font-size:0.8rem;color:#888;margin:2px 0 0;">Estimated arrival on {{ $pesanan->updated_at->addDays(3)->format('F d, Y') }}</p>
+            </div>
+        </div>
+
+        {{-- DIPROSES / SIAP KIRIM --}}
+        @elseif($isDiproses)
+        <div style="margin:16px 28px;padding:16px 20px;background:#e3f2fd;border-radius:10px;display:flex;align-items:center;gap:14px;border:1px solid #90caf9;">
+            <div style="width:40px;height:40px;background:#0277bd;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="20" height="20" fill="#fff" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+            </div>
+            <div>
+                <p style="font-weight:700;font-size:0.95rem;color:#0277bd;margin:0;">{{ $statusLabels[$pesanan->status] }}</p>
+                <p style="font-size:0.8rem;color:#888;margin:2px 0 0;">Pesanan Anda sedang dipersiapkan</p>
+            </div>
+        </div>
+
+        {{-- MENUNGGU PEMBAYARAN --}}
         @else
         <div style="margin:16px 28px;padding:16px 20px;background:#fff8e1;border-radius:10px;display:flex;align-items:center;gap:14px;border:1px solid #ffe082;">
             <div style="width:40px;height:40px;background:#f57f17;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                <svg width="20" height="20" fill="#fff" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                <svg width="20" height="20" fill="#fff" viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
             </div>
             <div>
-                <p style="font-weight:700;font-size:0.95rem;color:#f57f17;margin:0;">{{ $statusLabels[$pesanan->status] ?? ucfirst($pesanan->status) }}</p>
-                <p style="font-size:0.8rem;color:#888;margin:2px 0 0;">Pesanan sedang dalam proses</p>
+                <p style="font-weight:700;font-size:0.95rem;color:#f57f17;margin:0;">{{ $statusLabels[$pesanan->status] ?? ucfirst(str_replace('_',' ',$pesanan->status)) }}</p>
+                <p style="font-size:0.8rem;color:#888;margin:2px 0 0;">Segera lakukan pembayaran sebelum pesanan dibatalkan</p>
             </div>
         </div>
         @endif
@@ -139,14 +194,10 @@
             <div style="display:flex;align-items:center;gap:16px;padding:12px 0;border-bottom:1px solid #f5f5f5;">
                 {{-- Product Image --}}
                 <div style="flex-shrink:0;">
-                    @if($d->produk->gambar)
-                    <img src="{{ asset('storage/'.$d->produk->gambar) }}" alt="{{ $d->produk->nama }}"
-                         style="width:72px;height:72px;object-fit:cover;border-radius:10px;border:1px solid #eee;">
-                    @else
-                    <div style="width:72px;height:72px;background:#f5f3f0;border-radius:10px;display:flex;align-items:center;justify-content:center;">
-                        <svg width="26" height="26" fill="#ccc" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 12l-4-5-3 3.86L9 13l-3 4h12l-2-2z"/></svg>
-                    </div>
-                    @endif
+                    <img src="{{ asset($d->produk->image) }}"
+                         alt="{{ $d->produk->nama }}"
+                         style="width:72px;height:72px;object-fit:cover;border-radius:10px;border:1px solid #eee;"
+                         onerror="this.onerror=null;this.src='https://placehold.co/72x72/f5f3f0/aaa?text=Foto'">
                 </div>
 
                 {{-- Product Info --}}
@@ -196,13 +247,94 @@
             @endif
         </div>
 
+        {{-- ── TOMBOL KONFIRMASI (hanya jika dalam_pengiriman atau terkirim) ── --}}
+        @if(in_array($pesanan->status, ['dalam_pengiriman', 'terkirim']))
+        <div style="padding:20px 28px;border-top:1px solid #f0eeeb;display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap;">
+            <a href="{{ route('customer.pesanan') }}"
+               style="padding:11px 22px;border:1.5px solid #ccc;border-radius:10px;font-size:0.86rem;font-weight:600;color:#666;text-decoration:none;font-family:'Poppins',sans-serif;transition:background 0.15s;"
+               onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background=''">
+                Kembali
+            </a>
+            <button type="button"
+                onclick="document.getElementById('modalKonfirmasiDetail').style.display='flex';document.body.style.overflow='hidden';"
+                style="padding:11px 22px;background:#2e7d32;color:#fff;border:none;border-radius:10px;font-size:0.86rem;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;display:flex;align-items:center;gap:7px;transition:background 0.15s;"
+                onmouseover="this.style.background='#1b5e20'" onmouseout="this.style.background='#2e7d32'">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                Konfirmasi Pesanan Diterima
+            </button>
+        </div>
+        @endif
+
     </div>{{-- end main card --}}
 
 </div>
 </div>
 
+{{-- ── MODAL KONFIRMASI (detail page) ── --}}
+@if(in_array($pesanan->status, ['dalam_pengiriman', 'terkirim']))
+<div id="modalKonfirmasiDetail" style="
+    display:none;position:fixed;inset:0;
+    background:rgba(0,0,0,0.45);z-index:9999;
+    align-items:center;justify-content:center;
+    backdrop-filter:blur(3px);padding:20px;
+">
+    <div style="
+        background:#fff;border-radius:18px;
+        max-width:440px;width:100%;
+        padding:32px 28px;
+        box-shadow:0 20px 60px rgba(0,0,0,0.18);
+        animation:slideUpDetail 0.25s ease;
+        text-align:center;
+    ">
+        {{-- Icon --}}
+        <div style="width:72px;height:72px;background:#e8f5e9;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;">
+            <svg width="36" height="36" fill="#2e7d32" viewBox="0 0 24 24">
+                <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+            </svg>
+        </div>
+
+        <h3 style="font-family:'Poppins',sans-serif;font-size:1.1rem;font-weight:700;color:#1a1a1a;margin:0 0 8px;">
+            Konfirmasi Penerimaan Pesanan
+        </h3>
+        <p style="font-size:0.84rem;color:#888;margin:0 0 6px;">Apakah kamu sudah menerima pesanan:</p>
+        <p style="font-size:0.93rem;font-weight:700;color:#7a5c4e;margin:0 0 18px;">
+            {{ strtoupper($pesanan->detailPesanan->first()?->produk?->nama ?? 'Pesanan #' . $pesanan->id) }}
+            @if($pesanan->detailPesanan->count() > 1)
+                <span style="font-size:0.78rem;color:#aaa;font-weight:500;">+{{ $pesanan->detailPesanan->count() - 1 }} lainnya</span>
+            @endif
+        </p>
+
+        <div style="background:#fff8f5;border:1px solid #f5d5c5;border-radius:10px;padding:12px 16px;margin-bottom:24px;font-size:0.79rem;color:#7a4030;text-align:left;display:flex;gap:8px;align-items:flex-start;">
+            <i class="bi bi-exclamation-triangle-fill" style="flex-shrink:0;margin-top:1px;"></i>
+            <span>Pastikan paket sudah kamu terima dengan baik. Konfirmasi tidak dapat dibatalkan.</span>
+        </div>
+
+        <form method="POST" action="{{ route('customer.pesanan.konfirmasi', $pesanan->id) }}">
+            @csrf
+            <div style="display:flex;gap:12px;">
+                <button type="button"
+                    onclick="document.getElementById('modalKonfirmasiDetail').style.display='none';document.body.style.overflow='';"
+                    style="flex:1;padding:12px;border:1.5px solid #ddd;background:#fff;color:#666;border-radius:10px;font-size:0.86rem;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;"
+                    onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='#fff'">
+                    Batal
+                </button>
+                <button type="submit"
+                    style="flex:1;padding:12px;background:#2e7d32;color:#fff;border:none;border-radius:10px;font-size:0.86rem;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px;"
+                    onmouseover="this.style.background='#1b5e20'" onmouseout="this.style.background='#2e7d32'">
+                    <i class="bi bi-check2-circle"></i> Ya, Sudah Terima
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+@endif
+
 @push('styles')
 <style>
+@keyframes slideUpDetail {
+    from { opacity:0; transform:translateY(20px) scale(0.97); }
+    to   { opacity:1; transform:translateY(0)    scale(1); }
+}
 @media(max-width:600px){
     div[style*="grid-template-columns:1fr 1fr"]{
         grid-template-columns:1fr !important;
@@ -219,4 +351,28 @@
 }
 </style>
 @endpush
+
+@push('scripts')
+<script>
+// Close detail modal on backdrop click or Escape
+@if(in_array($pesanan->status, ['dalam_pengiriman', 'terkirim']))
+const detailModal = document.getElementById('modalKonfirmasiDetail');
+if (detailModal) {
+    detailModal.addEventListener('click', function(e) {
+        if (e.target === this) {
+            this.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    });
+}
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && detailModal) {
+        detailModal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+});
+@endif
+</script>
+@endpush
+
 @endsection

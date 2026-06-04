@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 
 <head>
   <meta charset="utf-8">
@@ -51,7 +51,7 @@
       <!-- RIGHT BUTTONS -->
       <div class="d-flex gap-3 align-items-center">
         <div class="search-container d-flex align-items-center position-relative">
-          <input type="text" id="searchInput" class="search-input" placeholder="Cari produk..." />
+          <input type="text" id="searchInput" class="search-input" placeholder="Search products..." />
 
           <!-- Search -->
           <button id="searchToggle" class="icon-btn circle-icon" title="Search">
@@ -59,7 +59,7 @@
           </button>
 
           <!-- Pesanan -->
-          <button class="icon-btn circle-icon" onclick="window.location.href='{{ route('customer.pesanan') }}'" title="Pesanan Saya">
+          <button class="icon-btn circle-icon" onclick="window.location.href='{{ route('customer.pesanan') }}'" title="My Orders">
             <i class="bi bi-truck"></i>
           </button>
 
@@ -90,13 +90,13 @@
                   @endif
                   @if(Auth::user()->role === 'customer')
                     <a href="{{ route('customer.profil') }}" style="color:#333;">
-                      <i class="bi bi-person-badge me-1"></i> Profil Saya
+                      <i class="bi bi-person-badge me-1"></i> My Profile
                     </a>
                     <a href="{{ route('customer.pesanan') }}" style="color:#333;">
-                      <i class="bi bi-box-seam me-1"></i> Pesanan Saya
+                      <i class="bi bi-box-seam me-1"></i> My Orders
                     </a>
                     <a href="{{ route('keranjang') }}" style="color:#333;">
-                      <i class="bi bi-cart3 me-1"></i> Keranjang
+                      <i class="bi bi-cart3 me-1"></i> Cart
                     </a>
                   @endif
                   <form action="{{ route('logout') }}" method="POST" style="margin:0;padding:0;">

@@ -1,16 +1,16 @@
 @extends('layouts.admin')
-@section('title','Kelola Transaksi')
+@section('title','Manage Transactions')
 @section('content')
 <div class="page-header">
     <div>
-        <h1><i class="bi bi-credit-card-fill" style="color:var(--accent);margin-right:8px;"></i>Kelola Transaksi</h1>
-        <p>Verifikasi dan kelola pembayaran</p>
+        <h1><i class="bi bi-credit-card-fill" style="color:var(--accent);margin-right:8px;"></i>Manage Transactions</h1>
+        <p>Verify and manage payments</p>
     </div>
 </div>
 
 <div class="table-container">
     <table>
-        <thead><tr><th>#ID</th><th>Customer</th><th>Pesanan</th><th>Total</th><th>Metode</th><th>Status</th><th style="text-align:right;">Aksi</th></tr></thead>
+        <thead><tr><th>#ID</th><th>Customer</th><th>Order</th><th>Total</th><th>Method</th><th>Status</th><th style="text-align:right;">Action</th></tr></thead>
         <tbody>
             @forelse($transaksi as $t)
             <tr>
@@ -26,9 +26,9 @@
                 <td>{{ $t->metode_pembayaran ?? '-' }}</td>
                 <td>
                     @if($t->status === 'lunas')
-                        <span class="badge badge-success"><i class="bi bi-check-circle-fill"></i> Lunas</span>
+                        <span class="badge badge-success"><i class="bi bi-check-circle-fill"></i> Paid</span>
                     @elseif($t->status === 'ditolak')
-                        <span class="badge badge-danger"><i class="bi bi-x-circle-fill"></i> Ditolak</span>
+                        <span class="badge badge-danger"><i class="bi bi-x-circle-fill"></i> Rejected</span>
                     @else
                         <span class="badge badge-warning"><i class="bi bi-clock-fill"></i> Pending</span>
                     @endif
@@ -39,12 +39,12 @@
                         <form action="{{ route('admin.transaksi.verifikasi', $t->id) }}" method="POST">
                             @csrf @method('PUT')
                             <input type="hidden" name="status" value="lunas">
-                            <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Verifikasi pembayaran?')"><i class="bi bi-check-lg"></i> Lunas</button>
+                            <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Verify this payment?')"><i class="bi bi-check-lg"></i> Paid</button>
                         </form>
                         <form action="{{ route('admin.transaksi.verifikasi', $t->id) }}" method="POST">
                             @csrf @method('PUT')
                             <input type="hidden" name="status" value="ditolak">
-                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Tolak pembayaran?')"><i class="bi bi-x-lg"></i> Tolak</button>
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Reject this payment?')"><i class="bi bi-x-lg"></i> Reject</button>
                         </form>
                     </div>
                     @else
@@ -55,7 +55,7 @@
             @empty
             <tr>
                 <td colspan="7">
-                    <div class="empty-state"><i class="bi bi-credit-card" style="display:block;"></i><p>Belum ada transaksi.</p></div>
+                    <div class="empty-state"><i class="bi bi-credit-card" style="display:block;"></i><p>No transactions found.</p></div>
                 </td>
             </tr>
             @endforelse

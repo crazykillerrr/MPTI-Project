@@ -23,14 +23,14 @@
     {{-- ── Header ── --}}
     <div class="d-flex align-items-center justify-content-between mb-3">
       <div>
-        <p style="font-family:'Poppins',sans-serif;font-size:10.5px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#d66428;margin:0 0 4px;">Pilihan Untukmu</p>
+        <p style="font-family:'Poppins',sans-serif;font-size:10.5px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#d66428;margin:0 0 4px;">Picked For You</p>
         <h2 style="font-family:'Poppins',sans-serif;font-size:1.55rem;font-weight:700;color:#1a1a1a;margin:0;line-height:1.15;">Product Recomendations</h2>
       </div>
       <a href="{{ $checkoutUrl ?? '#' }}"
          style="font-family:'Poppins',sans-serif;font-size:0.78rem;font-weight:600;color:#666;text-decoration:none;border:1.5px solid #ccc;border-radius:20px;padding:6px 18px;transition:all .18s;white-space:nowrap;"
          onmouseover="this.style.borderColor='#1a1a1a';this.style.color='#1a1a1a';"
          onmouseout="this.style.borderColor='#ccc';this.style.color='#666';">
-        Lihat Semua &rarr;
+        View All &rarr;
       </a>
     </div>
 
@@ -110,9 +110,9 @@
                 >
                 <div class="rek-side-badge">
                   @if($isGuest)
-                    <i class="bi bi-lock-fill me-1"></i> Login untuk beli
+                    <i class="bi bi-lock-fill me-1"></i> Login to Buy
                   @else
-                    <i class="bi bi-eye-fill me-1"></i> Lihat Detail
+                    <i class="bi bi-eye-fill me-1"></i> View Details
                   @endif
                 </div>
               </div>
@@ -123,7 +123,7 @@
             </a>
           @else
             <div class="rek-side-card" style="background:#ece9e4;border:none;align-items:center;justify-content:center;">
-              <p style="font-family:'Poppins',sans-serif;color:#bbb;font-size:0.75rem;padding:20px;text-align:center;">Produk segera hadir</p>
+              <p style="font-family:'Poppins',sans-serif;color:#bbb;font-size:0.75rem;padding:20px;text-align:center;">Coming Soon</p>
             </div>
           @endif
 
@@ -143,9 +143,9 @@
                 >
                 <div class="rek-side-badge">
                   @if($isGuest)
-                    <i class="bi bi-lock-fill me-1"></i> Login untuk beli
+                    <i class="bi bi-lock-fill me-1"></i> Login to Buy
                   @else
-                    <i class="bi bi-eye-fill me-1"></i> Lihat Detail
+                    <i class="bi bi-eye-fill me-1"></i> View Details
                   @endif
                 </div>
               </div>
@@ -156,7 +156,7 @@
             </a>
           @else
             <div class="rek-side-card" style="background:#ece9e4;border:none;align-items:center;justify-content:center;">
-              <p style="font-family:'Poppins',sans-serif;color:#bbb;font-size:0.75rem;padding:20px;text-align:center;">Produk segera hadir</p>
+              <p style="font-family:'Poppins',sans-serif;color:#bbb;font-size:0.75rem;padding:20px;text-align:center;">Coming Soon</p>
             </div>
           @endif
 
@@ -184,9 +184,9 @@
               >
               <div class="rek-grid-overlay">
                 @if($isGuest)
-                  <span><i class="bi bi-lock me-1"></i> Login untuk beli</span>
+                  <span><i class="bi bi-lock me-1"></i> Login to Buy</span>
                 @else
-                  <span><i class="bi bi-eye me-1"></i> Lihat Detail</span>
+                  <span><i class="bi bi-eye me-1"></i> View Details</span>
                 @endif
               </div>
             </div>
@@ -203,7 +203,7 @@
     @else
       <div class="rek-empty">
         <i class="bi bi-bag-x" style="font-size:2.2rem;display:block;margin-bottom:10px;color:#ccc;"></i>
-        Belum ada produk rekomendasi saat ini.
+        No product recommendations at this time.
       </div>
     @endif
 

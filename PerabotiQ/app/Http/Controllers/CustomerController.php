@@ -53,10 +53,45 @@ class CustomerController extends Controller
         return back()->with('success', 'Produk dihapus dari keranjang.');
     }
 
-    // Checkout
+    // Terima pilihan item dari keranjang, simpan ke session, redirect ke checkout
+    public function pilihCheckout(Request $request)
+    {
+        $selectedIds = $request->input('selected_ids', []);
+
+        if (empty($selectedIds)) {
+            return redirect()->route('keranjang')->with('error', 'Pilih minimal satu produk untuk checkout.');
+        }
+
+        // Validasi: pastikan ID milik user yang sedang login
+        $validIds = Keranjang::where('user_id', Auth::id())
+                             ->whereIn('id', $selectedIds)
+                             ->pluck('id')
+                             ->toArray();
+
+        if (empty($validIds)) {
+            return redirect()->route('keranjang')->with('error', 'Item yang dipilih tidak valid.');
+        }
+
+        // Simpan ID yang valid ke session
+        session(['checkout_selected_ids' => $validIds]);
+
+        return redirect()->route('checkout');
+    }
+
+    // Checkout — hanya tampilkan item yang dipilih dari session
     public function checkout()
     {
-        $items = Keranjang::with('produk')->where('user_id', Auth::id())->get();
+        $selectedIds = session('checkout_selected_ids', []);
+
+        if (empty($selectedIds)) {
+            return redirect()->route('keranjang')->with('error', 'Pilih minimal satu produk untuk checkout.');
+        }
+
+        $items = Keranjang::with('produk')
+                          ->where('user_id', Auth::id())
+                          ->whereIn('id', $selectedIds)
+                          ->get();
+
         if ($items->isEmpty()) return redirect()->route('keranjang')->with('error', 'Keranjang kosong.');
         $total = $items->sum(fn($i) => $i->produk->harga * $i->qty);
         return view('customer.pesanan.checkout', compact('items', 'total'));
@@ -64,7 +99,18 @@ class CustomerController extends Controller
 
     public function konfirmasiCheckout(Request $request)
     {
-        $items = Keranjang::with('produk')->where('user_id', Auth::id())->get();
+        // Ambil hanya item yang dipilih dari session
+        $selectedIds = session('checkout_selected_ids', []);
+
+        if (empty($selectedIds)) {
+            return redirect()->route('keranjang')->with('error', 'Sesi checkout tidak valid, silakan pilih ulang.');
+        }
+
+        $items = Keranjang::with('produk')
+                          ->where('user_id', Auth::id())
+                          ->whereIn('id', $selectedIds)
+                          ->get();
+
         if ($items->isEmpty()) return redirect()->route('keranjang');
 
         $total   = $items->sum(fn($i) => $i->produk->harga * $i->qty);
@@ -84,7 +130,13 @@ class CustomerController extends Controller
             $item->produk->decrement('stok', $item->qty);
         }
 
-        Keranjang::where('user_id', Auth::id())->delete();
+        // Hanya hapus item yang di-checkout, bukan semua isi keranjang
+        Keranjang::where('user_id', Auth::id())
+                 ->whereIn('id', $selectedIds)
+                 ->delete();
+
+        // Bersihkan session pilihan
+        session()->forget('checkout_selected_ids');
 
         Transaksi::create([
             'pesanan_id'        => $pesanan->id,
@@ -107,19 +159,40 @@ class CustomerController extends Controller
     // Lacak Pesanan
     public function pesanan()
     {
-        $pesanan = Pesanan::with('detailPesanan.produk')
+        $pesanan = Pesanan::with('detailPesanan.produk', 'transaksi')
                           ->where('user_id', Auth::id())
                           ->orderByDesc('created_at')
                           ->get();
-        return view('melacak', compact('pesanan'));
+        return view('customer.pesanan.index', compact('pesanan'));
     }
 
     public function pesananDetail($id)
     {
-        $pesanan = Pesanan::with('detailPesanan.produk')
+        $pesanan = Pesanan::with('detailPesanan.produk', 'transaksi', 'user')
                           ->where('user_id', Auth::id())
                           ->findOrFail($id);
         return view('customer.pesanan.detail', compact('pesanan'));
+    }
+
+    // Konfirmasi Penerimaan Pesanan
+    public function konfirmasiTerima($id)
+    {
+        $pesanan = Pesanan::where('user_id', Auth::id())->findOrFail($id);
+
+        // Hanya boleh konfirmasi jika status dalam_pengiriman atau terkirim
+        if (!in_array($pesanan->status, ['dalam_pengiriman', 'terkirim'])) {
+            return back()->with('error', 'Pesanan tidak dapat dikonfirmasi pada status ini.');
+        }
+
+        $pesanan->update(['status' => 'selesai']);
+
+        // Update transaksi menjadi lunas jika belum
+        if ($pesanan->transaksi && $pesanan->transaksi->status !== 'lunas') {
+            $pesanan->transaksi->update(['status' => 'lunas']);
+        }
+
+        return redirect()->route('customer.pesanan')
+                         ->with('success', 'Pesanan berhasil dikonfirmasi! Terima kasih sudah berbelanja di PerabotiQ. 🎉');
     }
 
     // Halaman kategori produk (versi login)
