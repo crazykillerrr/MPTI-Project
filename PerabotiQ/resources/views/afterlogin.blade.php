@@ -49,16 +49,16 @@
             <!-- RIGHT BUTTONS -->
             <div class="d-flex gap-3 align-items-center">
               <div class="search-container d-flex align-items-center position-relative">
-                <input type="text" id="searchInput" class="search-input" placeholder="Cari produk..." />
-                <!-- Tombol Search -->
+                <input type="text" id="searchInput" class="search-input" placeholder="Search products..." />
+                <!-- Search Button -->
                 <button id="searchToggle" class="icon-btn circle-icon" title="Search">
                   <i class="bi bi-search"></i>
                 </button>
               
-                <!-- Input Search ke kiri -->
+                <!-- Search Input to the left -->
             
                 <!-- Delivery Icon -->
-                <button class="icon-btn circle-icon" onclick="window.location.href='{{ route('customer.pesanan') }}'" title="Pesanan Saya">
+                <button class="icon-btn circle-icon" onclick="window.location.href='{{ route('customer.pesanan') }}'" title="My Orders">
                   <i class="bi bi-truck"></i>
                 </button>
             
@@ -87,9 +87,9 @@
                   <a href="{{ route('admin.dashboard') }}" style="color: #0d6efd; font-weight: 500;">Dashboard Admin</a>
                   @endif
                   @if(Auth::user()->role === 'customer')
-                  <a href="{{ route('customer.profil') }}" style="color: #333;"><i class="bi bi-person-badge me-1"></i> Profil Saya</a>
-                  <a href="{{ route('customer.pesanan') }}" style="color: #333;"><i class="bi bi-box-seam me-1"></i> Pesanan Saya</a>
-                  <a href="{{ route('keranjang') }}" style="color: #333;"><i class="bi bi-cart3 me-1"></i> Keranjang</a>
+                  <a href="{{ route('customer.profil') }}" style="color: #333;"><i class="bi bi-person-badge me-1"></i> My Profile</a>
+                  <a href="{{ route('customer.pesanan') }}" style="color: #333;"><i class="bi bi-box-seam me-1"></i> My Orders</a>
+                  <a href="{{ route('keranjang') }}" style="color: #333;"><i class="bi bi-cart3 me-1"></i> Cart</a>
                   @endif
                   <form action="{{ route('logout') }}" method="POST" style="margin: 0; padding: 0;">
                     @csrf
@@ -231,7 +231,7 @@
             <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
               <div class="product-item position-relative p-0 overflow-hidden">
                 <a href="{{ route('produk.kategori.login', 'ruang-kerja') }}">
-                  <img src="https://d3p0bla3numw14.cloudfront.net/news-content/img/2021/08/02173644/Ruang-Kerja-Minimalis-di-Sudut-Ruangan.jpg" alt="Product 4" class="product-img">
+                  <img src="https://ruangin.com/wp-content/uploads/2022/01/desain-ruang-kantor-kecil-minimalis.jpg" alt="Product 4" class="product-img">
                 </a>
               </div>
               <p class="mt-2 fw-semibold text-left">Workspace</p>

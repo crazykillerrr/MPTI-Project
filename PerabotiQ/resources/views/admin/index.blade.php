@@ -11,7 +11,7 @@
     <div class="container">
       <a class="navbar-brand" href="/">PerabotiQ Admin</a>
       <div class="ms-auto d-flex">
-        <a class="nav-link text-white me-3" href="/">Ke Halaman Depan</a>
+        <a class="nav-link text-white me-3" href="/">Go to Homepage</a>
         <form action="{{ route('logout') }}" method="POST">
             @csrf
             <button class="btn btn-outline-light btn-sm" type="submit">Logout</button>
@@ -21,27 +21,27 @@
   </nav>
 
   <div class="container mt-5">
-    <h2>Manajemen Produk (Stok & Item)</h2>
+    <h2>Product Management (Stock & Items)</h2>
     @if(session('success'))
       <div class="alert alert-success">{{ session('success') }}</div>
     @endif
     
     <div class="card shadow-sm mt-4">
       <div class="card-header bg-white d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">Daftar Katalog Produk</h5>
-        <a href="{{ route('admin.create') }}" class="btn btn-primary btn-sm">Tambah Produk</a>
+        <h5 class="mb-0">Product Catalog</h5>
+        <a href="{{ route('admin.create') }}" class="btn btn-primary btn-sm">Add Product</a>
       </div>
       <div class="card-body p-0">
         <table class="table table-hover mb-0">
           <thead class="table-light">
             <tr>
               <th>ID</th>
-              <th>Gambar</th>
-              <th>Nama</th>
-              <th>Kategori</th>
-              <th>Harga</th>
-              <th>Stok</th>
-              <th class="text-center">Aksi</th>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th class="text-center">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -67,9 +67,9 @@
               </td>
               <td class="text-center">
                 <a href="{{ route('admin.edit', $p->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                <form action="{{ route('admin.destroy', $p->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus?');">
+                <form action="{{ route('admin.destroy', $p->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this?');">
                   @csrf
-                  <button class="btn btn-sm btn-danger" type="submit">Hapus</button>
+                  <button class="btn btn-sm btn-danger" type="submit">Delete</button>
                 </form>
               </td>
             </tr>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,9 +37,9 @@
             @auth
                 <span style="font-size:0.85rem;color:#666;">{{ Auth::user()->name }}</span>
                 @if(Auth::user()->role === 'customer')
-                    <a href="{{ route('customer.profil') }}" class="nav-btn">Profil Saya</a>
-                    <a href="{{ route('customer.pesanan') }}" class="nav-btn">Pesanan Saya</a>
-                    <a href="{{ route('keranjang') }}" class="nav-btn">Keranjang</a>
+                    <a href="{{ route('customer.profil') }}" class="nav-btn">My Profile</a>
+                    <a href="{{ route('customer.pesanan') }}" class="nav-btn">My Orders</a>
+                    <a href="{{ route('keranjang') }}" class="nav-btn">Cart</a>
                 @endif
                 <form action="{{ route('logout') }}" method="POST" style="display:inline;">
                     @csrf

@@ -48,7 +48,7 @@
   
       <!-- RIGHT BUTTONS -->
       <div class="search-container">
-        <input type="text" id="searchInput" class="search-input" placeholder="Cari produk..." />
+        <input type="text" id="searchInput" class="search-input" placeholder="Search products..." />
 
         <div class="d-flex gap-2 align-items-center">
           <button id="searchToggle" class="btn btn-outline-light" title="Search">

@@ -1,12 +1,12 @@
 @extends('layouts.admin')
-@section('title','Detail Pesanan')
+@section('title','Order Details')
 @section('content')
 <div class="page-header">
     <div>
-        <h1><i class="bi bi-receipt" style="color:var(--accent);margin-right:8px;"></i>Detail Pesanan #{{ $pesanan->id }}</h1>
-        <p>Informasi lengkap pesanan</p>
+        <h1><i class="bi bi-receipt" style="color:var(--accent);margin-right:8px;"></i>Order Details #{{ $pesanan->id }}</h1>
+        <p>Complete order information</p>
     </div>
-    <a href="{{ route('admin.pesanan') }}" class="btn"><i class="bi bi-arrow-left"></i> Kembali</a>
+    <a href="{{ route('admin.pesanan') }}" class="btn"><i class="bi bi-arrow-left"></i> Back</a>
 </div>
 
 <div class="detail-card">
@@ -17,7 +17,7 @@
                 <span class="detail-value">{{ $pesanan->user->name }}</span>
             </div>
             <div class="detail-row">
-                <span class="detail-label"><i class="bi bi-calendar3" style="margin-right:6px;color:var(--accent);"></i> Tanggal</span>
+                <span class="detail-label"><i class="bi bi-calendar3" style="margin-right:6px;color:var(--accent);"></i> Date</span>
                 <span class="detail-value">{{ $pesanan->created_at->format('d M Y, H:i') }}</span>
             </div>
         </div>
@@ -33,10 +33,10 @@
         </div>
     </div>
 
-    <h3 style="font-size:0.92rem;font-weight:600;margin-bottom:12px;color:var(--text-secondary);"><i class="bi bi-list-ul" style="margin-right:6px;"></i>Item Pesanan</h3>
+    <h3 style="font-size:0.92rem;font-weight:600;margin-bottom:12px;color:var(--text-secondary);"><i class="bi bi-list-ul" style="margin-right:6px;"></i>Order Items</h3>
     <div class="table-container" style="margin-bottom:24px;">
         <table>
-            <thead><tr><th>Produk</th><th>Qty</th><th>Harga</th><th style="text-align:right;">Subtotal</th></tr></thead>
+            <thead><tr><th>Product</th><th>Qty</th><th>Price</th><th style="text-align:right;">Subtotal</th></tr></thead>
             <tbody>
                 @foreach($pesanan->detailPesanan as $d)
                 <tr>

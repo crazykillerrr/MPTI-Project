@@ -1,6 +1,6 @@
 @extends('layouts.customer')
 
-@section('title', 'Keranjang — PerabotiQ')
+@section('title', 'Cart — PerabotiQ')
 
 @push('styles')
 <link href="/assets/css/keranjang.css" rel="stylesheet">
@@ -10,7 +10,7 @@
 <div class="keranjang-page">
   <div class="container" style="max-width:1120px;">
 
-    <h2 class="kj-page-title">Keranjang</h2>
+    <h2 class="kj-page-title">Cart</h2>
 
     @if(session('success'))
       <div class="alert alert-success alert-dismissible fade show mb-3" role="alert" style="font-family:'Poppins',sans-serif;font-size:0.875rem;">
@@ -27,18 +27,18 @@
 
     <div class="row g-4 align-items-start">
 
-      {{-- ══════════════ KOLOM KIRI: Items ══════════════ --}}
+      {{-- ══════════════ LEFT COLUMN: Items ══════════════ --}}
       <div class="col-lg-8">
 
         @if(isset($cartItems) && $cartItems->count() > 0)
 
-          {{-- Pilih Semua --}}
+          {{-- Select All --}}
           <div class="kj-select-bar">
             <input type="checkbox" id="checkAll" onchange="toggleAll(this)">
-            <label for="checkAll">Pilih Semua</label>
+            <label for="checkAll">Select All</label>
           </div>
 
-          {{-- Daftar produk --}}
+          {{-- Product list --}}
           <div id="cart-items">
             @foreach($cartItems as $item)
 
@@ -78,8 +78,8 @@
                     <form action="{{ route('keranjang.hapus') }}" method="POST" style="display:inline;">
                       @csrf
                       <input type="hidden" name="keranjang_id" value="{{ $item->id }}">
-                      <button type="submit" class="kj-btn-delete" title="Hapus"
-                        onclick="return confirm('Hapus produk ini dari keranjang?')">
+                      <button type="submit" class="kj-btn-delete" title="Remove"
+                        onclick="return confirm('Remove this product from the cart?')">
                         <i class="bi bi-trash3"></i>
                       </button>
                     </form>
@@ -106,24 +106,24 @@
           </div>
 
         @else
-          {{-- Keranjang kosong --}}
+          {{-- Cart is empty --}}
           <div class="kj-empty-box">
             <div class="kj-empty-icon"><i class="bi bi-cart-x"></i></div>
-            <h4>Wah, keranjangmu kosong!</h4>
-            <p>Yuk, cari produk favoritmu dulu~</p>
-            <a href="{{ route('customer.dashboard') }}#products" class="kj-btn-catalog">Lihat Katalog</a>
+            <h4>Your cart is empty!</h4>
+            <p>Browse our products and find something you love~</p>
+            <a href="{{ route('customer.dashboard') }}#products" class="kj-btn-catalog">View Catalog</a>
           </div>
         @endif
 
       </div>
 
-      {{-- ══════════════ KOLOM KANAN: Summary ══════════════ --}}
+      {{-- ══════════════ RIGHT COLUMN: Summary ══════════════ --}}
       <div class="col-lg-4">
         <div class="kj-summary-panel">
-          <p class="kj-summary-title">Detail Rincian Pembayaran</p>
+          <p class="kj-summary-title">Payment Summary</p>
 
           <div class="kj-summary-row">
-            <span class="kj-label">Subtotal (<span id="summary-count">0</span> produk)</span>
+            <span class="kj-label">Subtotal (<span id="summary-count">0</span> items)</span>
             <span class="kj-value" id="summary-subtotal">Rp0</span>
           </div>
 
@@ -133,14 +133,18 @@
           </div>
 
           @if(isset($cartItems) && $cartItems->count() > 0)
-            <a href="{{ route('checkout') }}" class="kj-btn-checkout" id="btn-checkout">
-              Lanjut Bayar
-            </a>
+            <form id="form-checkout" action="{{ route('checkout.pilih') }}" method="POST">
+              @csrf
+              <div id="selected-items-inputs"></div>
+              <button type="button" class="kj-btn-checkout kj-disabled" id="btn-checkout" onclick="submitCheckout()">
+                Proceed to Payment
+              </button>
+            </form>
           @else
-            <button class="kj-btn-checkout kj-disabled" disabled>Lanjut Bayar</button>
+            <button class="kj-btn-checkout kj-disabled" disabled>Proceed to Payment</button>
           @endif
 
-          <p class="kj-note-selected" id="note-selected">Pilih produk untuk melihat total</p>
+          <p class="kj-note-selected" id="note-selected">Select items to see the total</p>
         </div>
       </div>
 
@@ -210,8 +214,8 @@
     // Note text
     if (elNote) {
       elNote.textContent = totalQty > 0
-        ? totalQty + ' produk dipilih'
-        : 'Pilih produk untuk melihat total';
+        ? totalQty + ' items selected'
+        : 'Select items to see the total';
     }
 
     // Enable / disable checkout button
@@ -224,6 +228,32 @@
         elCheckout.setAttribute('disabled', 'disabled');
       }
     }
+
+    // Update hidden inputs dengan ID item yang dicentang
+    const inputContainer = document.getElementById('selected-items-inputs');
+    if (inputContainer) {
+      inputContainer.innerHTML = '';
+      document.querySelectorAll('.kj-item-card').forEach(card => {
+        const cb = card.querySelector('.item-checkbox');
+        if (cb && cb.checked) {
+          const input = document.createElement('input');
+          input.type  = 'hidden';
+          input.name  = 'selected_ids[]';
+          input.value = card.dataset.id;
+          inputContainer.appendChild(input);
+        }
+      });
+    }
+  }
+
+  /* ── Submit checkout hanya item yang diceklis ── */
+  function submitCheckout() {
+    const checked = document.querySelectorAll('.item-checkbox:checked');
+    if (checked.length === 0) {
+      alert('Pilih minimal satu produk untuk checkout.');
+      return;
+    }
+    document.getElementById('form-checkout').submit();
   }
 
   /* ── Ubah qty ── */

@@ -39,11 +39,13 @@ Route::middleware(['auth', 'customer'])->group(function () {
     Route::post('/keranjang/tambah', [CustomerController::class, 'tambahKeranjang'])->name('keranjang.tambah');
     Route::post('/keranjang/hapus',  [CustomerController::class, 'hapusKeranjang'])->name('keranjang.hapus');
 
+    Route::post('/checkout/pilih',      [CustomerController::class, 'pilihCheckout'])->name('checkout.pilih');
     Route::get('/checkout',             [CustomerController::class, 'checkout'])->name('checkout');
     Route::post('/checkout/konfirmasi', [CustomerController::class, 'konfirmasiCheckout'])->name('checkout.konfirmasi');
 
-    Route::get('/pesanan',      [CustomerController::class, 'pesanan'])->name('customer.pesanan');
-    Route::get('/pesanan/{id}', [CustomerController::class, 'pesananDetail'])->name('customer.pesanan.detail');
+    Route::get('/pesanan',                       [CustomerController::class, 'pesanan'])->name('customer.pesanan');
+    Route::get('/pesanan/{id}',                  [CustomerController::class, 'pesananDetail'])->name('customer.pesanan.detail');
+    Route::post('/pesanan/{id}/konfirmasi-terima', [CustomerController::class, 'konfirmasiTerima'])->name('customer.pesanan.konfirmasi');
 
     Route::get('/profil', [CustomerController::class, 'profil'])->name('customer.profil');
 });

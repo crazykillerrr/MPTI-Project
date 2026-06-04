@@ -1,13 +1,13 @@
 @extends('layouts.admin')
-@section('title','Kelola Produk')
+@section('title','Manage Products')
 @section('content')
 <div class="page-header">
     <div>
-        <h1><i class="bi bi-box-seam-fill" style="color:var(--accent);margin-right:8px;"></i>Kelola Produk</h1>
-        <p>Kelola katalog produk toko Anda</p>
+        <h1><i class="bi bi-box-seam-fill" style="color:var(--accent);margin-right:8px;"></i>Manage Products</h1>
+        <p>Manage your store product catalog</p>
     </div>
     <a href="{{ route('admin.produk.tambah') }}" class="btn btn-primary">
-        <i class="bi bi-plus-lg"></i> Tambah Produk
+        <i class="bi bi-plus-lg"></i> Add Product
     </a>
 </div>
 
@@ -15,11 +15,11 @@
     <table>
         <thead>
             <tr>
-                <th>Produk</th>
-                <th>Kategori</th>
-                <th>Harga</th>
-                <th>Stok</th>
-                <th style="text-align:right;">Aksi</th>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th style="text-align:right;">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -53,10 +53,10 @@
                         <a href="{{ route('admin.produk.edit', $p->id) }}" class="btn btn-sm">
                             <i class="bi bi-pencil-square"></i> Edit
                         </a>
-                        <form action="{{ route('admin.produk.hapus', $p->id) }}" method="POST" onsubmit="return confirm('Hapus produk ini?')">
+                        <form action="{{ route('admin.produk.hapus', $p->id) }}" method="POST" onsubmit="return confirm('Delete this product?')">
                             @csrf @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-danger">
-                                <i class="bi bi-trash3"></i> Hapus
+                                <i class="bi bi-trash3"></i> Delete
                             </button>
                         </form>
                     </div>
@@ -67,7 +67,7 @@
                 <td colspan="5">
                     <div class="empty-state">
                         <i class="bi bi-box-seam" style="display:block;"></i>
-                        <p>Belum ada produk. <a href="{{ route('admin.produk.tambah') }}" style="color:var(--accent);font-weight:600;">Tambah produk pertama →</a></p>
+                        <p>No products found. <a href="{{ route('admin.produk.tambah') }}" style="color:var(--accent);font-weight:600;">Add your first product →</a></p>
                     </div>
                 </td>
             </tr>
