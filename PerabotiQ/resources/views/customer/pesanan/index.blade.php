@@ -466,9 +466,15 @@
                     <a href="{{ route('customer.pesanan.detail', $p->id) }}" class="btn-aksi btn-outline-cust">
                         Change Payment
                     </a>
-                    <a href="{{ route('customer.pesanan.detail', $p->id) }}" class="btn-aksi btn-primary-cust">
-                        <i class="bi bi-credit-card"></i> Pay
-                    </a>
+                    @if($p->transaksi && $p->transaksi->snap_token)
+                        <button type="button" class="btn-aksi btn-primary-cust" onclick="payWithMidtrans('{{ $p->transaksi->snap_token }}')">
+                            <i class="bi bi-credit-card"></i> Pay
+                        </button>
+                    @else
+                        <a href="{{ route('customer.pesanan.detail', $p->id) }}" class="btn-aksi btn-primary-cust">
+                            <i class="bi bi-credit-card"></i> Pay
+                        </a>
+                    @endif
 
                 {{-- TO SHIP --}}
                 @elseif(in_array($p->status, ['diproses','siap_kirim']))
@@ -737,7 +743,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabParam  = urlParams.get('tab');
     if (tabParam) switchTab(tabParam);
 });
+
+// Midtrans Snap Implementation
+function payWithMidtrans(snapToken) {
+    if (!snapToken) {
+        alert('Token pembayaran tidak valid.');
+        return;
+    }
+    window.snap.pay(snapToken, {
+        onSuccess: function(result){
+            alert("Pembayaran berhasil!");
+            window.location.reload();
+        },
+        onPending: function(result){
+            alert("Menunggu pembayaran Anda!");
+            window.location.reload();
+        },
+        onError: function(result){
+            alert("Pembayaran gagal!");
+            window.location.reload();
+        },
+        onClose: function(){
+            console.log('Customer closed the popup without finishing the payment');
+        }
+    });
+}
 </script>
+
+<!-- Midtrans Snap JS -->
+<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
 @endpush
 
 @endsection

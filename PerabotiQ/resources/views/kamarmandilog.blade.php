@@ -126,7 +126,7 @@
         @forelse($products as $p)
         <div class="col-6 col-md-4 col-lg-3">
           <div class="card shadow-sm product-card h-100">
-            <a href="{{ route('produk.detail', $p->id) }}"><img src="/{{ $p->gambar }}" class="card-img-top" alt="{{ $p->nama }}" style="height: 200px; object-fit: cover; cursor: pointer;"></a>
+            <a href="{{ route('produk.detail', $p->id) }}"><img src="{{ asset($p->image) }}" class="card-img-top" alt="{{ $p->nama }}" style="height: 200px; object-fit: cover; cursor: pointer;"></a>
             <div class="card-body d-flex flex-column">
               <a href="{{ route('produk.detail', $p->id) }}" style="text-decoration: none; color: inherit;"><h6 class="fw-bold mb-1">{{ $p->nama }}</h6></a>
               <p class="mb-1 text-muted">Rp {{ number_format($p->harga, 0, ',', '.') }}</p>

@@ -243,7 +243,12 @@
                 Payment successful on {{ $transaksi->updated_at->format('F d, Y, H:i') }} WIB
             </p>
             @elseif($pesanan->status === 'menunggu_pembayaran')
-            <p style="font-size:0.78rem;color:#e65100;margin:0;">Menunggu konfirmasi pembayaran</p>
+            <p style="font-size:0.78rem;color:#e65100;margin:0 0 10px;">Menunggu konfirmasi pembayaran</p>
+            @if($transaksi && $transaksi->snap_token)
+                <button type="button" onclick="payWithMidtrans('{{ $transaksi->snap_token }}')" style="padding:10px 20px;background:#7a5c4e;color:#fff;border:none;border-radius:8px;font-size:0.86rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+                    <i class="bi bi-credit-card"></i> Bayar Sekarang
+                </button>
+            @endif
             @endif
         </div>
 
@@ -372,7 +377,35 @@ document.addEventListener('keydown', function(e) {
     }
 });
 @endif
+
+// Midtrans Snap Implementation
+function payWithMidtrans(snapToken) {
+    if (!snapToken) {
+        alert('Token pembayaran tidak valid.');
+        return;
+    }
+    window.snap.pay(snapToken, {
+        onSuccess: function(result){
+            alert("Pembayaran berhasil!");
+            window.location.reload();
+        },
+        onPending: function(result){
+            alert("Menunggu pembayaran Anda!");
+            window.location.reload();
+        },
+        onError: function(result){
+            alert("Pembayaran gagal!");
+            window.location.reload();
+        },
+        onClose: function(){
+            console.log('Customer closed the popup without finishing the payment');
+        }
+    });
+}
 </script>
+
+<!-- Midtrans Snap JS -->
+<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
 @endpush
 
 @endsection

@@ -8,6 +8,8 @@ use App\Models\Pesanan;
 use App\Models\Keranjang;
 use App\Models\Transaksi;
 use Illuminate\Support\Facades\Auth;
+use Midtrans\Config;
+use Midtrans\Snap;
 
 class CustomerController extends Controller
 {
@@ -113,7 +115,10 @@ class CustomerController extends Controller
 
         if ($items->isEmpty()) return redirect()->route('keranjang');
 
-        $total   = $items->sum(fn($i) => $i->produk->harga * $i->qty);
+        $subtotal = $items->sum(fn($i) => $i->produk->harga * $i->qty);
+        $ongkir   = ($request->pengiriman === 'express') ? 150000 : 100000;
+        $total    = $subtotal + $ongkir;
+
         $pesanan = Pesanan::create([
             'user_id'           => Auth::id(),
             'status'            => 'menunggu_pembayaran',
@@ -138,13 +143,38 @@ class CustomerController extends Controller
         // Bersihkan session pilihan
         session()->forget('checkout_selected_ids');
 
-        Transaksi::create([
+        $transaksi = Transaksi::create([
             'pesanan_id'        => $pesanan->id,
             'user_id'           => Auth::id(),
             'total'             => $total,
             'status'            => 'pending',
             'metode_pembayaran' => $request->metode_pembayaran,
         ]);
+
+        // Konfigurasi midtrans
+        Config::$serverKey = config('midtrans.server_key');
+        Config::$isProduction = config('midtrans.is_production');
+        Config::$isSanitized = config('midtrans.is_sanitized');
+        Config::$is3ds = config('midtrans.is_3ds');
+
+        $params = [
+            'transaction_details' => [
+                'order_id' => $transaksi->id . '-' . time(),
+                'gross_amount' => $total,
+            ],
+            'customer_details' => [
+                'first_name' => Auth::user()->name,
+                'email' => Auth::user()->email,
+            ],
+        ];
+
+        try {
+            $snapToken = Snap::getSnapToken($params);
+            $transaksi->snap_token = $snapToken;
+            $transaksi->save();
+        } catch (\Exception $e) {
+            return redirect()->route('customer.pesanan')->with('error', 'Gagal menghasilkan token pembayaran Midtrans: ' . $e->getMessage());
+        }
 
         return redirect()->route('customer.pesanan')->with('success', 'Pesanan berhasil dibuat! Silakan lakukan pembayaran.');
     }
